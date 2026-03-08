@@ -120,6 +120,28 @@
     .anno-text { color: var(--text); line-height: 1.6; }
     .anno-text strong { color: var(--cyan); font-weight: 400; }
     .anno-text-m strong { color: var(--magenta); font-weight: 400; }
+    /* ── Collapsible sections ── */
+    .collapsible-toggle {
+      width: 100%; background: none; border: none; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 18px; font-family: var(--font); font-size: 0.86rem;
+      color: var(--cyan); text-align: left;
+      border-bottom: 1px solid var(--border); background: var(--bg-3);
+      transition: background 0.15s;
+    }
+    .collapsible-toggle:hover { background: var(--cyan-dim); }
+    .collapsible-toggle .toggle-label { font-weight: 500; }
+    .collapsible-toggle .toggle-hint {
+      font-size: 0.7rem; color: var(--muted); display: flex; align-items: center; gap: 8px;
+    }
+    .collapsible-toggle .toggle-arrow {
+      color: var(--cyan); font-size: 0.8rem;
+      transition: transform 0.2s ease;
+    }
+    .collapsible-toggle.open .toggle-arrow { transform: rotate(90deg); }
+    .collapsible-body { display: none; }
+    .collapsible-body.open { display: block; }
+
     .contact-row { display: flex; gap: 8px; margin-bottom: 8px; font-size: 0.82rem; }
     .contact-k { color: var(--muted); min-width: 80px; }
     .contact-v { color: var(--text); }
@@ -137,7 +159,7 @@
     }
     .hbox  { color: var(--cyan); text-shadow: 0 0 8px var(--cyan-glow); }
     .hname {
-      color: var(--cyan); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.04em;
+      color: var(--cyan);
       text-shadow: 0 0 14px var(--cyan-glow), 0 0 30px rgba(0,212,255,0.2);
     }
     .htag  { color: var(--magenta); font-size: 0.78rem; text-shadow: 0 0 8px var(--mag-glow); }
@@ -665,13 +687,18 @@
         </div>
       </div>
       <div class="box">
-        <div class="box-head"><span class="box-title">How to navigate</span></div>
-        <div class="box-body">
-          <ul>
-            <li><strong>Click any folder or file</strong> in the tree to open a detailed panel about that work</li>
-            <li><strong>The command line at the bottom is live.</strong> Ask it anything — it responds conversationally and knows my full background. Try questions like <em>"what has Conor built at Meta?"</em> or <em>"how does his research connect to his industry work?"</em></li>
-            <li><strong>[ docs ]</strong> in the top-right corner explains the portfolio's structure in detail</li>
-          </ul>
+        <button class="collapsible-toggle" data-collapsible="nav-section">
+          <span class="toggle-label">How to navigate</span>
+          <span class="toggle-hint"><span>expand</span> <span class="toggle-arrow">▶</span></span>
+        </button>
+        <div class="collapsible-body" id="nav-section">
+          <div class="box-body">
+            <ul>
+              <li><strong>Click any folder or file</strong> in the tree to open a detailed panel about that work</li>
+              <li><strong>The command line at the bottom is live.</strong> Ask it anything — it responds conversationally and knows my full background. Try questions like <em>"what has Conor built at Meta?"</em> or <em>"how does his research connect to his industry work?"</em></li>
+              <li><strong>[ docs ]</strong> in the top-right corner explains the portfolio's structure in detail</li>
+            </ul>
+          </div>
         </div>
       </div>
       <div style="text-align:right;margin-top:8px;">
@@ -706,7 +733,11 @@
 
       <!-- Annotated diagram -->
       <div class="box">
-        <div class="box-head"><span class="box-title">Annotated interface map</span></div>
+        <button class="collapsible-toggle" data-collapsible="diagram-section">
+          <span class="toggle-label">Annotated interface map</span>
+          <span class="toggle-hint"><span>expand</span> <span class="toggle-arrow">▶</span></span>
+        </button>
+        <div class="collapsible-body" id="diagram-section">
         <div class="box-body" style="padding-bottom:4px;">
           <div class="anno-diagram">┌─────────────────────────────────────────────────────────┐
 │ <span class="anno-hl">~/jconor-sullivan</span>                    <span class="anno-hl">[ docs ]</span> ← <span class="anno-hl">①</span>        │  panel bar
@@ -741,6 +772,7 @@
               <div class="anno-text anno-text-m"><strong>AI command line</strong> — Type any question about my background and hit Enter. Powered by Gemini via a serverless proxy — the AI has been given my full CV as its knowledge base.</div>
             </div>
           </div>
+        </div>
         </div>
       </div>
 
@@ -1534,6 +1566,18 @@
   // close via Escape
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeAll();
+  });
+
+  // ── Collapsible sections ─────────────────────────────────────
+  document.addEventListener('click', e => {
+    const toggle = e.target.closest('[data-collapsible]');
+    if (!toggle) return;
+    const id = toggle.dataset.collapsible;
+    const body = document.getElementById(id);
+    const hint = toggle.querySelector('.toggle-hint span:first-child');
+    const isOpen = body.classList.toggle('open');
+    toggle.classList.toggle('open', isOpen);
+    if (hint) hint.textContent = isOpen ? 'collapse' : 'expand';
   });
 
   // ── Welcome modal on first visit ─────────────────────────────
