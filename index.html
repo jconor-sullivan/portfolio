@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>J. Conor Sullivan</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #070b14;
+      --bg-2:      #0c1220;
+      --bg-3:      #101828;
+      --border:    #1a2840;
+      --text:      #b8cfe0;
+      --muted:     #3d5068;
+      --cyan:      #00d4ff;
+      --cyan-dim:  rgba(0,212,255,0.10);
+      --cyan-glow: rgba(0,212,255,0.35);
+      --magenta:   #d63af9;
+      --mag-dim:   rgba(214,58,249,0.10);
+      --mag-glow:  rgba(214,58,249,0.3);
+      --green:     #39d353;
+      --yellow:    #e8c547;
+      --font:      'JetBrains Mono','Fira Code','Cascadia Code',monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+      padding: 40px 24px 80px;
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.022) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap {
+      max-width: 880px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Outer frame ── */
+    .frame {
+      border: 1px solid var(--cyan);
+      border-radius: 2px;
+      box-shadow:
+        0 0 12px var(--cyan-glow),
+        0 0 40px rgba(0,212,255,0.07),
+        inset 0 0 30px rgba(0,212,255,0.02);
+    }
+
+    .panel-bar {
+      padding: 8px 20px;
+      background: var(--bg-3);
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .panel-bar .path { color: var(--cyan); }
+
+    .body { padding: 36px 40px 44px; }
+
+    /* ── ASCII header ── */
+    .ascii-header {
+      white-space: pre;
+      line-height: 1.5;
+      margin-bottom: 28px;
+      font-size: 0.8rem;
+    }
+    .hbox  { color: var(--cyan); text-shadow: 0 0 8px var(--cyan-glow); }
+    .hname {
+      color: var(--cyan); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.04em;
+      text-shadow: 0 0 14px var(--cyan-glow), 0 0 30px rgba(0,212,255,0.2);
+    }
+    .htag  { color: var(--magenta); font-size: 0.78rem; text-shadow: 0 0 8px var(--mag-glow); }
+    .hmk   { color: var(--muted); }
+    .hmv   { color: var(--green); }
+
+    /* ── Header area (banner + avatar side by side) ── */
+    .header-area {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      margin-bottom: 28px;
+    }
+    .ascii-header { flex: 1; margin-bottom: 0; }
+
+    /* ── Avatar widget ── */
+    .avatar-link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .avatar-img {
+      max-height: 160px;
+      width: auto;
+      border-radius: 4px;
+      border: 1px solid var(--muted);
+      transition: filter 0.2s, border-color 0.2s;
+    }
+    .avatar-link:hover .avatar-img {
+      filter: drop-shadow(0 0 6px var(--magenta));
+      border-color: var(--magenta);
+    }
+    .avatar-label {
+      font-size: 0.65rem;
+      color: var(--cyan);
+      letter-spacing: 0.05em;
+      text-shadow: 0 0 6px var(--cyan-glow);
+      transition: color 0.2s, text-shadow 0.2s;
+    }
+    .avatar-link:hover .avatar-label {
+      color: var(--magenta);
+      text-shadow: 0 0 6px var(--mag-glow);
+    }
+
+    /* ── Nav hint ── */
+    .nav-hint {
+      margin-bottom: 24px;
+      border-left: 2px solid var(--border);
+      padding-left: 14px;
+    }
+    .nav-hint p {
+      font-size: 0.75rem;
+      color: var(--yellow);
+      line-height: 1.9;
+    }
+    .nav-hint .hl { color: var(--cyan); }
+
+    /* ── Prompt ── */
+    .prompt-block { margin-bottom: 10px; font-size: 0.8rem; }
+    .p-user { color: var(--magenta); text-shadow: 0 0 6px var(--mag-glow); }
+    .p-sep  { color: var(--muted); }
+    .p-path { color: var(--cyan); }
+    .p-cmd  { color: var(--text); }
+
+    /* ── Tree ── */
+    .tree-wrap { margin-bottom: 20px; }
+    .tree {
+      white-space: pre;
+      font-size: 0.82rem;
+      line-height: 1.75;
+    }
+    .tree .conn  { color: var(--muted); }
+    .tree .root  { color: var(--yellow); font-weight: 700; text-shadow: 0 0 8px rgba(232,197,71,0.4); }
+    .tree .cmt   { color: var(--muted); font-style: italic; }
+    .tree .fi    { color: var(--cyan); } /* folder icon */
+
+    .tree a { text-decoration: none; color: var(--cyan); }
+    .tree a:hover {
+      color: var(--magenta);
+      text-shadow: 0 0 8px var(--mag-glow);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .tree .l2-link { color: #52c4f5; }
+    .tree .l2-link:hover { color: var(--magenta); text-shadow: 0 0 8px var(--mag-glow); text-decoration: underline; }
+    .tree .file-link { color: #8ddbff; }
+    .tree .file-link:hover { color: var(--magenta); text-shadow: 0 0 8px var(--mag-glow); text-decoration: underline; }
+
+    /* ── Cursor ── */
+    .cursor {
+      display: inline-block; width: 7px; height: 0.85em;
+      background: var(--cyan); vertical-align: text-bottom;
+      box-shadow: 0 0 8px var(--cyan-glow);
+      animation: blink 1.1s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ════════════════════════════════════
+       MODAL OVERLAY
+    ════════════════════════════════════ */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(4,8,18,0.82);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 100;
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    /* ── Modal window ── */
+    .modal {
+      width: 100%; max-width: 780px; max-height: 88vh;
+      border: 1px solid var(--cyan);
+      border-radius: 2px;
+      background: var(--bg);
+      box-shadow: 0 0 20px var(--cyan-glow), 0 0 60px rgba(0,212,255,0.1), 0 24px 80px rgba(0,0,0,0.7);
+      display: flex; flex-direction: column;
+      transform: translateY(10px) scale(0.99);
+      transition: transform 0.2s ease;
+    }
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+
+    .modal-bar {
+      padding: 9px 18px;
+      background: var(--bg-3);
+      border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      flex-shrink: 0; gap: 12px;
+    }
+    .modal-path { color: var(--cyan); font-size: 0.74rem; }
+    .modal-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+
+    .modal-btn {
+      background: none; border: 1px solid var(--border);
+      color: var(--muted); font-family: var(--font); font-size: 0.7rem;
+      padding: 2px 8px; cursor: pointer; border-radius: 2px;
+      transition: border-color 0.15s, color 0.15s, box-shadow 0.15s;
+    }
+    .modal-btn:hover { border-color: var(--magenta); color: var(--magenta); box-shadow: 0 0 6px var(--mag-glow); }
+    .modal-btn.back { color: var(--cyan); border-color: rgba(0,212,255,0.3); }
+    .modal-btn.back:hover { border-color: var(--cyan); box-shadow: 0 0 6px var(--cyan-glow); color: var(--cyan); }
+
+    .modal-body {
+      padding: 28px 32px 36px;
+      overflow-y: auto; flex: 1;
+    }
+    .modal-body::-webkit-scrollbar { width: 4px; }
+    .modal-body::-webkit-scrollbar-track { background: var(--bg-2); }
+    .modal-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    /* ── Section label ── */
+    .slabel {
+      display: inline-block; font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--magenta); text-shadow: 0 0 10px var(--mag-glow);
+      border: 1px solid var(--magenta);
+      box-shadow: 0 0 8px var(--mag-glow), inset 0 0 8px var(--mag-dim);
+      padding: 3px 10px 3px 8px; margin-bottom: 18px;
+    }
+    .slabel::before { content: '// '; color: var(--muted); font-weight: 400; }
+
+    .modal-prompt { font-size: 0.78rem; margin-bottom: 18px; }
+
+    /* ── Content box ── */
+    .box {
+      border: 1px solid var(--border); border-radius: 2px;
+      margin-bottom: 14px; background: var(--bg-2);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .box:hover { border-color: var(--cyan); box-shadow: 0 0 10px var(--cyan-glow); }
+
+    .box-head {
+      padding: 10px 18px; border-bottom: 1px solid var(--border);
+      background: var(--bg-3);
+      display: flex; justify-content: space-between; align-items: baseline;
+      gap: 12px; flex-wrap: wrap;
+    }
+    .box-title { color: var(--cyan); font-size: 0.86rem; font-weight: 500; }
+    .box-meta  { color: var(--muted); font-size: 0.72rem; }
+
+    .box-body {
+      padding: 18px 20px; color: var(--text);
+      font-size: 0.82rem; line-height: 1.9;
+    }
+    .box-body p { margin-bottom: 10px; }
+    .box-body p:last-of-type { margin-bottom: 0; }
+    .box-body strong { color: var(--cyan); font-weight: 400; }
+
+    .box-body ul { margin: 8px 0 10px 0; padding-left: 0; list-style: none; }
+    .box-body li { padding-left: 18px; position: relative; margin-bottom: 4px; font-size: 0.8rem; color: var(--text); }
+    .box-body li::before { content: '—'; position: absolute; left: 0; color: var(--muted); }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 20px; border-top: 1px solid var(--border); }
+    .tag {
+      color: var(--cyan); border: 1px solid rgba(0,212,255,0.25);
+      background: rgba(0,212,255,0.05); border-radius: 2px;
+      padding: 1px 8px; font-size: 0.7rem;
+    }
+
+    .box-link-row { padding: 10px 20px; border-top: 1px solid var(--border); display: flex; gap: 16px; flex-wrap: wrap; }
+    .box-link {
+      color: var(--magenta); font-size: 0.78rem; text-decoration: none;
+      text-shadow: 0 0 6px var(--mag-glow);
+    }
+    .box-link:hover { text-decoration: underline; }
+    .box-link.cyan-link { color: var(--cyan); text-shadow: 0 0 6px var(--cyan-glow); }
+
+    /* ── Sub-file nav (inside meta modal) ── */
+    .subfile-nav {
+      border: 1px solid var(--border); border-radius: 2px;
+      background: var(--bg-2); margin-top: 14px;
+    }
+    .subfile-nav-head {
+      padding: 9px 18px; border-bottom: 1px solid var(--border);
+      background: var(--bg-3); font-size: 0.72rem; color: var(--muted);
+    }
+    .subfile-list { padding: 8px 0; }
+    .subfile-item {
+      display: block; padding: 7px 18px;
+      font-size: 0.8rem; color: var(--text);
+      text-decoration: none; border-bottom: 1px solid var(--border);
+      transition: background 0.15s, color 0.15s;
+      cursor: pointer;
+    }
+    .subfile-item:last-child { border-bottom: none; }
+    .subfile-item:hover { background: var(--cyan-dim); color: var(--cyan); }
+    .subfile-item .sf-icon { color: var(--cyan); margin-right: 8px; }
+    .subfile-item .sf-desc { color: var(--muted); font-size: 0.72rem; margin-left: 8px; }
+
+    /* ── Impact callout ── */
+    .impact {
+      border-left: 3px solid var(--cyan);
+      background: var(--cyan-dim);
+      padding: 12px 16px;
+      margin-top: 14px;
+      font-size: 0.8rem;
+      color: var(--text);
+      line-height: 1.8;
+    }
+    .impact strong { color: var(--cyan); font-weight: 400; }
+
+    /* ── NAEP iframe preview ── */
+    .iframe-wrap {
+      border: 1px solid var(--border); border-radius: 2px;
+      overflow: hidden; margin-bottom: 14px;
+      background: #fff; height: 280px; position: relative;
+    }
+    .iframe-wrap iframe {
+      width: 150%;
+      height: 150%;
+      border: none;
+      transform: scale(0.667);
+      transform-origin: top left;
+      pointer-events: none;
+    }
+    .iframe-label {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: rgba(7,11,20,0.85);
+      padding: 6px 12px;
+      font-size: 0.7rem; color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── About me readme styles ── */
+    .about-h1 { color: var(--cyan); font-weight: 700; font-size: 0.95rem; margin-bottom: 2px; text-shadow: 0 0 10px var(--cyan-glow); }
+    .about-h2 { color: var(--magenta); font-weight: 400; font-size: 0.8rem; margin-bottom: 20px; text-shadow: 0 0 8px var(--mag-glow); }
+    .about-p  { color: var(--text); margin-bottom: 12px; font-size: 0.83rem; line-height: 1.9; }
+    .about-p strong { color: var(--cyan); font-weight: 400; }
+    .about-hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+    .about-row { display: flex; gap: 8px; margin-bottom: 5px; font-size: 0.78rem; }
+    .about-k   { color: var(--muted); min-width: 100px; flex-shrink: 0; }
+    .about-v   { color: var(--green); }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="frame">
+    <div class="panel-bar">
+      <span><span class="path">~/jconor-sullivan</span></span>
+      <span>portfolio · v1.0</span>
+    </div>
+
+    <div class="body">
+
+      <!-- HEADER AREA: banner + pixel avatar -->
+      <div class="header-area">
+      <div class="ascii-header"><span class="hbox">╔══════════════════════════════════════════════════════════════════════╗
+║                                                                      ║
+║  </span><span class="hname">J. Conor Sullivan</span><span class="hbox">                                                    ║
+║  </span><span class="htag">Content Architecture * UX System Design * AI Documentation Ontology</span><span class="hbox">   ║
+║                                                                      ║
+╠══════════════════════════════════════════════════════════════════════╣
+║  </span><span class="hmk">currently  </span><span class="hmv">Principal Technical Content Designer · Meta InfraSec</span><span class="hbox">          ║
+║  </span><span class="hmk">research   </span><span class="hmv">PhD (expected 2029) · Information Science · Univ. at Buffalo</span><span class="hbox">  ║
+║  </span><span class="hmk">location   </span><span class="hmv">Red Hook; Brooklyn, NY</span><span class="hbox">                                        ║
+╚══════════════════════════════════════════════════════════════════════╝</span></div>
+
+      <!-- PIXEL AVATAR -->
+      <a class="avatar-link" href="https://www.linkedin.com/in/jconorsullivan/" target="_blank" rel="noopener">
+        <img class="avatar-img" src="profile%20pic.jpg" alt="J. Conor Sullivan">
+        <span class="avatar-label">Visit my LinkedIn</span>
+      </a>
+
+      </div><!-- /header-area -->
+
+      <!-- NAV HINT -->
+      <div class="nav-hint">
+        <p>// this filesystem is a map of my career, research, and design work</p>
+        <p>// select any <span class="hl">&#x1F5C0;</span> folder or file link to open it as a panel &nbsp;·&nbsp; <span class="hl">[ESC]</span> or select Close to dismiss</p>
+      </div>
+
+      <!-- PROMPT -->
+      <div class="prompt-block">
+        <span class="p-user">jconor</span><span class="p-sep">@</span><span class="p-path">portfolio</span><span class="p-sep">:~$</span>
+        <span class="p-cmd"> ls --tree</span>
+      </div>
+
+      <!-- TREE -->
+      <div class="tree-wrap">
+        <div class="tree"><span class="root">~/jconor-sullivan/</span>
+<span class="conn">│</span>
+<span class="conn">├── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-about">about_me.md</a>       <span class="cmt"># who i am</span>
+<span class="conn">│</span>
+<span class="conn">├── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-cv">cv.md</a>       <span class="cmt"># full curriculum vitae</span>
+<span class="conn">│</span>
+<span class="conn">├── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-artifacts">ux-architecture-samples/</a>       <span class="cmt"># information architecture · design systems</span>
+<span class="conn">│   ├── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-agent" class="l2-link">compliance-agent-prototype/</a>
+<span class="conn">│   └── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-naep-artifact" class="l2-link">naep-ux-design-system/</a>
+<span class="conn">│</span>
+<span class="conn">├── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-research">research-background/</a>       <span class="cmt"># phd * masters * information systems and psychology</span>
+<span class="conn">│   ├── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-research" class="l2-link">phd-information-science.md</a>
+<span class="conn">│   └── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-masters" class="l2-link">masters-educational-psychology.md</a>
+<span class="conn">│</span>
+<span class="conn">└── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-meta">career/</a>       <span class="cmt"># ux systems * content design * technical writing * publishing</span>
+<span class="conn">    ├── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-meta" class="l2-link">meta/</a>
+<span class="conn">    │   ├── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-meta-infosec" class="file-link">infosec-content-architecture.md</a>
+<span class="conn">    │   ├── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-meta-labs" class="file-link">meta-labs.md</a>
+<span class="conn">    │   ├── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-meta-cloud" class="file-link">cloud-portal.md</a>
+<span class="conn">    │   ├── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-meta-airlock" class="file-link">governance-airlock.md</a>
+<span class="conn">    │   └── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-meta-esh" class="file-link">engineering-support-hub.md</a>
+<span class="conn">    ├── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-naep-work" class="l2-link">ets-naep/</a>
+<span class="conn">    │   └── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-naep-work" class="file-link">ux-design-system.md</a>
+<span class="conn">    └── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-archive" class="l2-link">career-archive/</a>
+<span class="conn">        ├── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-archive" class="file-link">rand-council-for-aid-to-education.md</a>
+<span class="conn">        └── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-archive" class="file-link">ww-norton.md</a>
+</div>
+      </div>
+
+      <!-- Final prompt -->
+      <div style="margin-top:8px;">
+        <span class="p-user">jconor</span><span class="p-sep">@</span><span class="p-path">portfolio</span><span class="p-sep">:~$</span>
+        <span class="p-cmd"> </span><span class="cursor"></span>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<!-- ════════════════════════════════════════════════════════════
+     MODALS
+════════════════════════════════════════════════════════════ -->
+
+<!-- ABOUT ME -->
+<div class="modal-overlay" id="modal-about">
+  <div class="modal">
+    <div class="modal-bar">
+      <span class="modal-path">~/jconor-sullivan/about_me.md</span>
+      <div class="modal-actions"><button class="modal-btn" data-close>✕ close</button></div>
+    </div>
+    <div class="modal-body">
+      <div class="slabel">About Me</div>
+      <div class="modal-prompt">
+        <span class="p-user">jconor</span><span class="p-sep">@</span><span class="p-path">portfolio</span><span class="p-sep">:~$</span>
+        <span class="p-cmd"> cat about_me.md</span>
+      </div>
+      <div class="about-h1"># J. Conor Sullivan</div>
+      <div class="about-h2">## Research Scientist &nbsp;·&nbsp; UX Architect &nbsp;·&nbsp; Documentation Systems for AI</div>
+      <p class="about-p">I design the information architectures that make AI systems legible, trustworthy, and useful. My work sits at the intersection of <strong>agent interaction design</strong>, <strong>documentation architecture</strong>, and <strong>knowledge governance</strong> — the structural layer that turns powerful systems into ones people can actually navigate and rely on.</p>
+      <p class="about-p">Over 15 years spanning scholarly publishing, large-scale educational assessment, and enterprise security infrastructure at Meta, I've built content systems that make technically complex products work for real people. As AI shifts the content role toward information management and system design, I'm bringing that depth of practice into research and AI experience architecture.</p>
+      <hr class="about-hr">
+      <div class="about-row"><span class="about-k">currently</span><span class="about-v">Principal Technical Content Designer · Meta InfraSec (via consulting)</span></div>
+      <div class="about-row"><span class="about-k">research</span><span class="about-v">PhD (expected 2029) · Information Science · University at Buffalo</span></div>
+      <div class="about-row"><span class="about-k">location</span><span class="about-v">Red Hook; Brooklyn, NY</span></div>
+      <div class="about-row"><span class="about-k">focus</span><span class="about-v">agent UX · documentation architecture · knowledge systems · AI content design</span></div>
+      <div class="about-row" style="margin-top:10px;"><span class="about-k">background</span><span class="about-v">WW Norton (editorial) → RAND/CAE (knowledge mgmt) → ETS/NAEP (UX systems) → Meta (infosec)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SYSTEM DESIGN ARTIFACTS (folder overview) -->
+<div class="modal-overlay" id="modal-artifacts">
+  <div class="modal">
+    <div class="modal-bar">
+      <span class="modal-path">~/jconor-sullivan/ux-architecture-samples/</span>
+      <div class="modal-actions"><button class="modal-btn" data-close>✕ close</button></div>
+    </div>
+    <div class="modal-body">
+      <div class="slabel">UX Architecture Samples</div>
+      <div class="modal-prompt">
+        <span class="p-user">jconor</span><span class="p-sep">@</span><span class="p-path">portfolio</span><span class="p-sep">:~$</span>
+        <span class="p-cmd"> ls ux-architecture-samples/</span>
+      </div>
+      <p style="font-size:0.82rem; color:var(--text); margin-bottom:18px; line-height:1.9;">These artifacts represent my practice as an information architect — work that goes beyond writing to the structural design of how complex systems communicate, behave, and scale. Click a file to explore.</p>
+      <div class="subfile-nav">
+        <div class="subfile-nav-head">// 2 artifacts</div>
+        <div class="subfile-list">
+          <a class="subfile-item" href="#" data-modal="modal-agent">
+            <span class="sf-icon">&#x1F5C0;</span>compliance-agent-prototype/<span class="sf-desc">agent UX · system prompt architecture · 9 interaction flows</span>
+          </a>
+          <a class="subfile-item" href="#" data-modal="modal-naep-artifact">
+            <span class="sf-icon">&#x1F5C0;</span>naep-ux-design-system/<span class="sf-desc">living design system · national assessment platform · accessibility</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CV -->
+<div class="modal-overlay" id="modal-cv">
+  <div class="modal" style="max-width:760px;">
+    <div class="modal-bar">
+      <span class="modal-path">~/jconor-sullivan/cv.md</span>
+      <div class="modal-actions">
+        <a class="modal-btn" href="SullivanJConor_CV.pdf" download="JConorSullivan_CV.pdf">↓ download as PDF</a>
+        <button class="modal-btn" data-close>✕ close</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="slabel">Curriculum Vitae</div>
+      <div class="modal-prompt">
+        <span class="p-user">jconor</span><span class="p-sep">@</span><span class="p-path">portfolio</span><span class="p-sep">:~$</span>
+        <span class="p-cmd"> cat cv.md</span>
+      </div>
+
+      <div class="box">
+        <div class="box-head">
+          <span class="box-title">J. Conor Sullivan</span>
+          <span class="box-meta">Content Architecture · UX System Design · AI Documentation Ontology</span>
+        </div>
+        <div class="box-body" style="padding-bottom:0;">
+          <p style="margin-bottom:8px;">Red Hook, Brooklyn, NY &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/jconorsullivan/" target="_blank" style="color:var(--cyan);">linkedin.com/in/jconorsullivan</a> &nbsp;·&nbsp; <a href="https://github.com/jconor-sullivan" target="_blank" style="color:var(--cyan);">github.com/jconor-sullivan</a></p>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="box-head"><span class="box-title">Experience</span></div>
+        <div class="box-body" style="padding-top:12px; padding-bottom:4px;">
+
+          <div style="margin-bottom:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
+              <strong style="color:var(--cyan);">Principal Technical Content Designer</strong>
+              <span style="color:var(--muted); font-size:0.8rem;">2021 – present</span>
+            </div>
+            <div style="color:var(--text); margin-bottom:6px; font-size:0.85rem;">Meta InfraSec Product &amp; Design · via consulting group</div>
+            <ul style="margin:0; padding-left:18px;">
+              <li>Lead content architecture across four enterprise security &amp; infrastructure platforms at Meta scale</li>
+              <li>Drive workstreams for UX writing, product documentation, and knowledge management</li>
+              <li>Manage 3–5 direct reports (3 permanent + rotating contractor bench)</li>
+              <li>Integrated Metamate (Meta's internal LLM) into documentation workflows</li>
+              <li>Co-architected an FAQ authoring agent reducing manual support load across engineering org</li>
+            </ul>
+          </div>
+
+          <div style="margin-bottom:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
+              <strong style="color:var(--cyan);">Senior UX &amp; Technical Writer</strong>
+              <span style="color:var(--muted); font-size:0.8rem;">~2 years</span>
+            </div>
+            <div style="color:var(--text); margin-bottom:6px; font-size:0.85rem;">Educational Testing Service (ETS) · NAEP Contract</div>
+            <ul style="margin:0; padding-left:18px;">
+              <li>Senior UX &amp; technical writer for the National Assessment of Educational Progress (NAEP)</li>
+              <li>Authored and maintained the eNAEP living design system for student-facing UI</li>
+              <li>Established UX writing standards, accessibility patterns, and component documentation</li>
+            </ul>
+          </div>
+
+          <div style="margin-bottom:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
+              <strong style="color:var(--cyan);">Managing Editor</strong>
+              <span style="color:var(--muted); font-size:0.8rem;">8 years</span>
+            </div>
+            <div style="color:var(--text); margin-bottom:6px; font-size:0.85rem;">Council for Aid to Education · under RAND Corporation</div>
+            <ul style="margin:0; padding-left:18px;">
+              <li>Managing editor for a national education policy research organization operating under RAND</li>
+              <li>Oversaw editorial production, content strategy, and publication workflows</li>
+              <li>Managed relationships with researchers, funders, and external publishing partners</li>
+            </ul>
+          </div>
+
+          <div style="margin-bottom:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
+              <strong style="color:var(--cyan);">Editor</strong>
+              <span style="color:var(--muted); font-size:0.8rem;">5 years</span>
+            </div>
+            <div style="color:var(--text); margin-bottom:6px; font-size:0.85rem;">W.W. Norton &amp; Company</div>
+            <ul style="margin:0; padding-left:18px;">
+              <li>Acquisitions and developmental editor at one of the largest independent publishers in the US</li>
+              <li>Managed full editorial lifecycle from proposal through production for trade and academic titles</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="box-head"><span class="box-title">Education</span></div>
+        <div class="box-body" style="padding-top:12px; padding-bottom:4px;">
+
+          <div style="margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
+              <strong style="color:var(--cyan);">PhD · Information Science</strong>
+              <span style="color:var(--muted); font-size:0.8rem;">expected 2029</span>
+            </div>
+            <div style="color:var(--text); font-size:0.85rem;">University at Buffalo · focus: knowledge organization, agent system design, HCI</div>
+          </div>
+
+          <div style="margin-bottom:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
+              <strong style="color:var(--cyan);">M.S. · Educational Psychology</strong>
+              <span style="color:var(--muted); font-size:0.8rem;">2022</span>
+            </div>
+            <div style="color:var(--text); font-size:0.85rem;">Thesis: UX &amp; accessibility in digital assessment experiences</div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="box-head"><span class="box-title">Competencies</span></div>
+        <div class="box-body">
+          <div class="tags" style="margin-top:0;">
+            <span class="tag">content architecture</span>
+            <span class="tag">UX writing</span>
+            <span class="tag">information architecture</span>
+            <span class="tag">agent UX</span>
+            <span class="tag">system prompt design</span>
+            <span class="tag">knowledge management</span>
+            <span class="tag">documentation systems</span>
+            <span class="tag">design systems</span>
+            <span class="tag">technical writing</span>
+            <span class="tag">accessibility</span>
+            <span class="tag">HCI</span>
+            <span class="tag">team leadership</span>
+            <span class="tag">editorial</span>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+<!-- COMPLIANCE AGENT -->
+<div class="modal-overlay" id="modal-agent">
+  <div class="modal">
+    <div class="modal-bar">
+      <span class="modal-path">~/jconor-sullivan/ux-architecture-samples/compliance-agent-prototype/</span>
+      <div class="modal-actions">
+        <button class="modal-btn back" data-modal="modal-artifacts">← artifacts/</button>
+        <button class="modal-btn" data-close>✕ close</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="slabel">UX Architecture Sample</div>
+      <div class="modal-prompt">
+        <span class="p-user">jconor</span><span class="p-sep">@</span><span class="p-path">portfolio</span><span class="p-sep">:~$</span>
+        <span class="p-cmd"> cat compliance-agent-prototype/README.md</span>
+      </div>
+      <div class="box">
+        <div class="box-head">
+          <span class="box-title">Compliance Agent — Content Design Prototype</span>
+          <span class="box-meta">HTML · interactive · engineering handoff artifact</span>
+        </div>
+        <div class="box-body">
+          <p>An original concept I conceived, architected, and prototyped independently at Meta — not from a brief, but from identifying a gap: engineers building agentic systems had no principled framework for the communicative and behavioral layer, and content designers had no seat at the table. This prototype is my answer to that problem.</p>
+          <p>It models a compliance remediation agent end-to-end, specifying <strong>system prompts</strong>, <strong>voice &amp; tone directives</strong>, <strong>message templates</strong>, and <strong>quick-action hierarchies</strong> across nine interaction flows — structured explicitly for engineering handoff.</p>
+          <ul>
+            <li>9 full interaction flows — trigger through resolution</li>
+            <li>System prompt architecture with copyable directives</li>
+            <li>Voice &amp; tone spec per interaction state</li>
+            <li>Quick-action hierarchy (primary / secondary / tertiary)</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag">original concept</span>
+          <span class="tag">agent UX</span>
+          <span class="tag">system prompt design</span>
+          <span class="tag">documentation architecture</span>
+          <span class="tag">interaction design</span>
+          <span class="tag">compliance</span>
+          <span class="tag">engineering handoff</span>
+        </div>
+        <div class="box-link-row">
+          <a class="box-link" href="https://jconor-sullivan.github.io/AgentWireframeConcept/" target="_blank">→ view live prototype</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAEP ARTIFACT -->
+<div class="modal-overlay" id="modal-naep-artifact">
+  <div class="modal">
+    <div class="modal-bar">
+      <span class="modal-path">~/jconor-sullivan/ux-architecture-samples/naep-ux-design-system/</span>
+      <div class="modal-actions">
+        <button class="modal-btn back" data-modal="modal-artifacts">← artifacts/</button>
+        <button class="modal-btn" data-close>✕ close</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="slabel">UX Architecture Sample</div>
+      <div class="modal-prompt">
+        <span class="p-user">jconor</span><span class="p-sep">@</span><span class="p-path">portfolio</span><span class="p-sep">:~$</span>
+        <span class="p-cmd"> cat naep-ux-design-system/README.md</span>
+      </div>
+      <div class="box">
+        <div class="box-head">
+          <span class="box-title">NAEP Style Guide — UX Design System</span>
+          <span class="box-meta">eNAEP platform · Educational Testing Service · live artifact</span>
+        </div>
+        <div class="box-body">
+          <p>A living design system governing UI presentation across all student-facing interfaces for the National Assessment of Educational Progress — one of the largest standardized assessment programs in the United States. This is documentation architecture at national scale: specifying how every UI element behaves, reads, and adapts across discrete items, scenario-based tasks, and interactive components for millions of test takers.</p>
+          <p>The guide covers eight primary domains — <strong>Basics</strong> (color, typography, keyboard navigation), <strong>UI Elements</strong> (buttons, dialogs, controls), <strong>Features &amp; Tools</strong> (calculators, text-to-speech), <strong>Interactive Stimuli</strong> (rulers, sliders, sortable tables), <strong>Response Types</strong>, <strong>Instruction</strong>, and <strong>Environments</strong>. Each component includes live demos, interactive examples, and accessibility specifications.</p>
+          <p>Shown below: the <strong>Transformable Objects</strong> section — design specs for interactive components that test takers can resize, rotate, and translate, with precise handle states, cursor behaviors, and accessibility modes documented for engineering implementation.</p>
+        </div>
+        <div class="tags">
+          <span class="tag">design systems</span>
+          <span class="tag">UX writing</span>
+          <span class="tag">accessibility</span>
+          <span class="tag">component documentation</span>
+          <span class="tag">assessment</span>
+          <span class="tag">interaction specs</span>
+        </div>
+      </div>
+      <!-- Live page preview -->
+      <div class="iframe-wrap">
+        <iframe
+          src="https://naepdev.github.io/NAEP-Style-Guide/ux/transformable-objects.css.html"
+          title="NAEP Style Guide — Transformable Objects"
+          sandbox="allow-same-origin allow-scripts">
+        </iframe>
+        <div class="iframe-label">preview: NAEP Style Guide · Transformable Objects · live render</div>
+      </div>
+      <div class="box-link-row" style="border:1px solid var(--border); border-radius:2px; background:var(--bg-2); margin-top:0;">
+        <a class="box-link" href="https://naepdev.github.io/NAEP-Style-Guide/ux/introduction.md.html" target="_blank">→ visit live style guide</a>
+        <a class="box-link cyan-link" href="https://naepdev.github.io/NAEP-Style-Guide/ux/transformable-objects.css.html" target="_blank">→ open transformable objects page</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESEARCH -->
+<div class="modal-overlay" id="modal-research">
+  <div class="modal">
+    <div class="modal-bar">
+      <span class="modal-path">~/jconor-sullivan/research/phd-information-science.md</span>
+      <div class="modal-actions"><button class="modal-btn" data-close>✕ close</button></div>
+    </div>
+    <div class="modal-body">
+      <div class="slabel">Research</div>
+      <div class="modal-prompt">
+        <span class="p-user">jconor</span><span class="p-sep">@</span><span class="p-path">portfolio</span><span class="p-sep">:~$</span>
+        <span class="p-cmd"> cat research/phd-information-science.md</span>
+      </div>
+      <div class="box">
+        <div class="box-head">
+          <span class="box-title">PhD (expected 2029) · Information Science</span>
+          <span class="box-meta">University at Buffalo · in progress · Red Hook; Brooklyn, NY</span>
+        </div>
+        <div class="box-body">
+          <p>Doctoral research in information science with focus on knowledge organization, information architecture, and the structural conditions that make AI systems interpretable and governable. Research interests sit at the intersection of <strong>human-computer interaction</strong>, <strong>documentation theory</strong>, and <strong>agent system design</strong> — areas where the practice of information architecture is becoming foundational to building AI that works for people.</p>
+        </div>
+        <div class="tags">
+          <span class="tag">information science</span>
+          <span class="tag">knowledge organization</span>
+          <span class="tag">HCI</span>
+          <span class="tag">AI interpretability</span>
+          <span class="tag">documentation theory</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MASTERS THESIS -->
+<div class="modal-overlay" id="modal-masters">
+  <div class="modal">
+    <div class="modal-bar">
+      <span class="modal-path">~/jconor-sullivan/research-background/masters-educational-psychology.md</span>
+      <div class="modal-actions"><button class="modal-btn" data-close>✕ close</button></div>
+    </div>
+    <div class="modal-body">
+      <div class="slabel">Research Background</div>
+      <div class="modal-prompt">
+        <span class="p-user">jconor</span><span class="p-sep">@</span><span class="p-path">portfolio</span><span class="p-sep">:~$</span>
+        <span class="p-cmd"> cat research-background/masters-educational-psychology.md</span>
+      </div>
+      <div class="box">
+        <div class="box-head">
+          <span class="box-title">M.S. · Educational Psychology</span>
+          <span class="box-meta">2022 · UX &amp; accessibility in digital assessment</span>
+        </div>
+        <div class="box-body">
+          <p>My master's thesis investigated how UX design and accessibility principles could be applied to improve the experience of digital assessment platforms — the high-stakes, standardized testing environments used by millions of K–12 students.</p>
+          <p>The research focused on the intersection of <strong>cognitive load theory</strong>, <strong>accessible interface design</strong>, and <strong>assessment validity</strong> — specifically how poor UX can introduce construct-irrelevant variance, meaning students underperform not because of what's being measured, but because the interface itself creates barriers. My work proposed design frameworks for reducing that friction across input modalities, navigation patterns, and adaptive content presentation.</p>
+          <p>This research directly informs my current practice: the same principles that govern accessible assessment design — clarity, reduced cognitive overhead, predictable interaction patterns — apply directly to the design of AI-facing documentation systems and agent UX.</p>
+        </div>
+        <div class="tags">
+          <span class="tag">educational psychology</span>
+          <span class="tag">UX research</span>
+          <span class="tag">accessibility</span>
+          <span class="tag">digital assessment</span>
+          <span class="tag">cognitive load</span>
+          <span class="tag">human-computer interaction</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- META OVERVIEW -->
+<div class="modal-overlay" id="modal-meta">
+  <div class="modal">
+    <div class="modal-bar">
+      <span class="modal-path">~/jconor-sullivan/career/meta/</span>
+      <div class="modal-actions"><button class="modal-btn" data-close>✕ close</button></div>
+    </div>
+    <div class="modal-body">
+      <div class="slabel">Career · Meta</div>
+      <div class="modal-prompt">
+        <span class="p-user">jconor</span><span class="p-sep">@</span><span class="p-path">portfolio</span><span class="p-sep">:~$</span>
+        <span class="p-cmd"> cat career/meta/infosec-content-architecture.md</span>
+      </div>
+      <div class="box">
+        <div class="box-head">
+          <span class="box-title">Meta · Principal Technical Content Designer</span>
+          <span class="box-meta">2021–present · InfraSec Product &amp; Design · via consulting group</span>
+        </div>
+        <div class="box-body">
+          <p>Served as principal technical content designer for Meta's InfraSec Product &amp; Design team via a consulting group with a managed service agreement. Led content architecture across four enterprise security and infrastructure platforms at Meta scale, driving workstreams for <strong>UX writing</strong>, <strong>product documentation</strong>, and <strong>knowledge management</strong> with 3–5 direct reports at any given time — three permanent, plus a bench of contractors who cycle through projects.</p>
+          <p>Integrated Metamate (Meta's internal LLM) into documentation workflows and contributed to the architecture of AI-assisted support systems, including an FAQ authoring agent that reduced manual workload and improved case deflection rates across the engineering org.</p>
+        </div>
+        <div class="tags">
+          <span class="tag">content architecture</span>
+          <span class="tag">knowledge management</span>
+          <span class="tag">UX writing</span>
+          <span class="tag">infosec</span>
+          <span class="tag">LLM integration</span>
+          <span class="tag">team leadership</span>
+          <span class="tag">enterprise systems</span>
+        </div>
+      </div>
+      <div class="subfile-nav">
+        <div class="subfile-nav-head">// explore each platform — select to open</div>
+        <div class="subfile-list">
+          <a class="subfile-item" href="#" data-modal="modal-meta-labs">
+            <span class="sf-icon">&#x1F5C0;</span>meta-labs.md<span class="sf-desc">LabNet · patch management · lab device compliance</span>
+          </a>
+          <a class="subfile-item" href="#" data-modal="modal-meta-cloud">
+            <span class="sf-icon">&#x1F5C0;</span>cloud-portal.md<span class="sf-desc">multi-cloud provisioning · AWS · Azure · GCP</span>
+          </a>
+          <a class="subfile-item" href="#" data-modal="modal-meta-airlock">
+            <span class="sf-icon">&#x1F5C0;</span>governance-airlock.md<span class="sf-desc">contextual auth · compliance enforcement · device security</span>
+          </a>
+          <a class="subfile-item" href="#" data-modal="modal-meta-esh">
+            <span class="sf-icon">&#x1F5C0;</span>engineering-support-hub.md<span class="sf-desc">LLM-assisted case management · FAQ authoring agent</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- META: LABS -->
+<div class="modal-overlay" id="modal-meta-labs">
+  <div class="modal">
+    <div class="modal-bar">
+      <span class="modal-path">~/jconor-sullivan/career/meta/meta-labs.md</span>
+      <div class="modal-actions">
+        <button class="modal-btn back" data-modal="modal-meta">← meta/</button>
+        <button class="modal-btn" data-close>✕ close</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="slabel">Meta Labs</div>
+      <div class="box">
+        <div class="box-head">
+          <span class="box-title">Meta Labs · LabNet &amp; Patch Management Support</span>
+          <span class="box-meta">career/meta/meta-labs.md</span>
+        </div>
+        <div class="box-body">
+          <p>Meta's engineering labs are sprawling, multi-site environments where hardware teams prototype, test, and validate new products. As a core contributor to <strong>LabNet</strong>, I owned the product documentation that helped lab owners and administrators navigate the full lifecycle of their environments — from onboarding guides and feature walkthroughs to admin tooling docs and developer references.</p>
+          <p>I also played a key role in <strong>Patch Management Support Waves 1 and 2</strong>, authoring user guides for Linux workstations, Windows and macOS laptops, and managed servers. These guides walked users step-by-step through device enrollment, compliance verification, and troubleshooting — bridging LabNet's backend enforcement and the people using the devices.</p>
+          <ul>
+            <li>Authored and maintained LabNet's product documentation: user guides, reference docs, FAQs, developer onboarding</li>
+            <li>Documented UI features: device registration, allowlisting, SEV banners, test mode, email workflows</li>
+            <li>Created admin-facing documentation for monitoring, auditing, bulk task creation, and exception handling</li>
+            <li>Wrote user guides for Patch Management across Linux, Windows, macOS, and managed servers</li>
+            <li>Built platform-agnostic troubleshooting runbooks for certificate failures and device-joining issues</li>
+            <li>Contributed to feature development: lab provisioning, device management, request tracking</li>
+          </ul>
+        </div>
+        <div class="impact">
+          My documentation reduced manual intervention in lab management, empowered self-service for lab owners, and ensured compliance and onboarding processes were accessible regardless of technical background.
+        </div>
+        <div class="tags">
+          <span class="tag">LabNet</span><span class="tag">patch management</span><span class="tag">device compliance</span>
+          <span class="tag">runbooks</span><span class="tag">Linux / macOS / Windows</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- META: CLOUD -->
+<div class="modal-overlay" id="modal-meta-cloud">
+  <div class="modal">
+    <div class="modal-bar">
+      <span class="modal-path">~/jconor-sullivan/career/meta/cloud-portal.md</span>
+      <div class="modal-actions">
+        <button class="modal-btn back" data-modal="modal-meta">← meta/</button>
+        <button class="modal-btn" data-close>✕ close</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="slabel">Meta Cloud</div>
+      <div class="box">
+        <div class="box-head">
+          <span class="box-title">Meta Cloud · Cloud Portal</span>
+          <span class="box-meta">career/meta/cloud-portal.md</span>
+        </div>
+        <div class="box-body">
+          <p>Managing cloud infrastructure at Meta's scale means coordinating across AWS, Azure, and GCP — each with its own provisioning rules, compliance requirements, and approval workflows. <strong>Cloud Portal</strong> was built to centralize all of that into one platform, and my job was to make sure the people using it never felt lost.</p>
+          <p>I authored the onboarding and technical documentation that helped internal teams navigate cloud account creation, lifecycle management, and compliance reviews. I also contributed to feature development — building and refining the portal's capabilities for multi-cloud provisioning, automated approvals, and integration with Meta's internal authentication and budget systems.</p>
+          <ul>
+            <li>Authored onboarding documentation and technical guides for cloud account provisioning across AWS, Azure, and GCP</li>
+            <li>Documented self-service workflows for account creation, lifecycle management, and compliance reviews</li>
+            <li>Created reference materials for the cloud exception process and permanent account setup</li>
+            <li>Developed new features and resolved bugs to support multi-cloud provisioning and automated approvals</li>
+            <li>Integrated backend services with Meta's internal workflow, authentication, and budget tracking systems</li>
+            <li>Maintained the Cloud Portal wiki and workstream documentation for the broader team</li>
+          </ul>
+        </div>
+        <div class="impact">
+          My work streamlined cloud operations for Meta's infrastructure teams, making multi-cloud provisioning more accessible and ensuring compliance workflows were clear, efficient, and well-documented.
+        </div>
+        <div class="tags">
+          <span class="tag">Cloud Portal</span><span class="tag">AWS</span><span class="tag">Azure</span>
+          <span class="tag">GCP</span><span class="tag">multi-cloud</span><span class="tag">compliance</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- META: AIRLOCK -->
+<div class="modal-overlay" id="modal-meta-airlock">
+  <div class="modal">
+    <div class="modal-bar">
+      <span class="modal-path">~/jconor-sullivan/career/meta/governance-airlock.md</span>
+      <div class="modal-actions">
+        <button class="modal-btn back" data-modal="modal-meta">← meta/</button>
+        <button class="modal-btn" data-close>✕ close</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="slabel">Governance &amp; Compliance</div>
+      <div class="box">
+        <div class="box-head">
+          <span class="box-title">Governance &amp; Compliance · Airlock</span>
+          <span class="box-meta">career/meta/governance-airlock.md</span>
+        </div>
+        <div class="box-body">
+          <p><strong>Airlock</strong> is Meta's platform for contextual authentication and device compliance — enforcing security policies, managing device controls, and guiding users through remediation when something falls out of compliance. It replaced the legacy iAuth system and became the gateway to Meta's internal tools for every employee.</p>
+          <p>My contributions spanned both the documentation layer and the product itself. I authored high-level design and developer guides that outlined Airlock's architecture, workflows, and integration points. I documented remediation steps for common compliance failures and wrote guides for the admin and debug interfaces that support teams relied on daily.</p>
+          <ul>
+            <li>Authored and maintained high-level design guides, developer documentation, and architecture references</li>
+            <li>Documented remediation and exemption request workflows for common compliance failures</li>
+            <li>Created guides for Airlock Admin, Manage Exemptions, and Debug interfaces</li>
+            <li>Contributed to feature development for policy enforcement, remediation, and exemption workflows</li>
+            <li>Supported Linux client enforcement rollout: disk encryption and OS version compliance</li>
+            <li>Participated in reliability reviews, wargaming, and rollout controls for safe policy enforcement at scale</li>
+            <li>Integrated backend services with Palisade and Access Manager for exemption workflows</li>
+          </ul>
+        </div>
+        <div class="impact">
+          My work raised the security bar for Meta's client fleet while keeping the experience user-friendly. Automated remediation and clear documentation reduced support burden and helped users resolve compliance issues independently.
+        </div>
+        <div class="tags">
+          <span class="tag">Airlock</span><span class="tag">device security</span><span class="tag">auth policy</span>
+          <span class="tag">compliance</span><span class="tag">Linux enforcement</span><span class="tag">remediation UX</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- META: ESH -->
+<div class="modal-overlay" id="modal-meta-esh">
+  <div class="modal">
+    <div class="modal-bar">
+      <span class="modal-path">~/jconor-sullivan/career/meta/engineering-support-hub.md</span>
+      <div class="modal-actions">
+        <button class="modal-btn back" data-modal="modal-meta">← meta/</button>
+        <button class="modal-btn" data-close>✕ close</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="slabel">Engineering Enablement</div>
+      <div class="box">
+        <div class="box-head">
+          <span class="box-title">Engineering Support Hub &amp; FAQ Authoring Agent</span>
+          <span class="box-meta">career/meta/engineering-support-hub.md</span>
+        </div>
+        <div class="box-body">
+          <p><strong>Engineering Support Hub (ESH)</strong> was Meta's centralized platform for managing engineering support cases, integrating directly with Workplace group posts and providing analytics-driven workflows for support specialists. My role was to make sure both sides of the experience — engineers asking for help and specialists providing it — had the content and tools they needed.</p>
+          <p>My most impactful contribution was helping bring AI into the support workflow. I designed and documented the <strong>SEP form workflow</strong>, which prioritized engineering posts and improved LLM-generated suggestions for case creators. I also contributed to integrating <strong>Metamate as the FAQ authoring agent</strong> within ESH, enabling automated FAQ generation that reduced manual workload and improved deflection rates.</p>
+          <ul>
+            <li>Authored product documentation for ESH: user guides, onboarding instructions, technical runbooks</li>
+            <li>Documented case management workflows for assignment, escalation, resolution, and Oncall Hub integration</li>
+            <li>Created onboarding guides for external request groups with tagging and reporting instructions</li>
+            <li>Designed and documented the SEP form workflow for prioritized engineering support and improved LLM suggestions</li>
+            <li>Contributed to Metamate-powered FAQ authoring agent integration for automated answer generation</li>
+            <li>Supported the next-generation ESH release: onboarded 29 teams, resolved ~3,600 cases</li>
+            <li>Helped build the ESH Data Foundation for custom analytics dashboards</li>
+          </ul>
+        </div>
+        <div class="impact">
+          ESH contributions saved engineers an estimated <strong>four hours per week</strong>, improved support response quality through LLM-powered suggestions, and expanded the platform's reach across Meta's engineering organization.
+        </div>
+        <div class="tags">
+          <span class="tag">ESH</span><span class="tag">LLM integration</span><span class="tag">FAQ authoring agent</span>
+          <span class="tag">Metamate</span><span class="tag">case management</span><span class="tag">AI-assisted support</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- META: INFOSEC OVERVIEW (direct tree link) -->
+<div class="modal-overlay" id="modal-meta-infosec">
+  <div class="modal">
+    <div class="modal-bar">
+      <span class="modal-path">~/jconor-sullivan/career/meta/infosec-content-architecture.md</span>
+      <div class="modal-actions">
+        <button class="modal-btn back" data-modal="modal-meta">← meta/</button>
+        <button class="modal-btn" data-close>✕ close</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="slabel">Meta · InfraSec Overview</div>
+      <div class="box">
+        <div class="box-head">
+          <span class="box-title">InfraSec Content Architecture — Overview</span>
+          <span class="box-meta">career/meta/ · 2021–present</span>
+        </div>
+        <div class="box-body">
+          <p>At Meta, content architecture for security infrastructure means owning the information layer of systems that every employee depends on to do their work safely. I served as the principal technical content designer for the InfraSec Product &amp; Design team — the person responsible for ensuring that complex security systems were documented, navigable, and comprehensible.</p>
+          <p>My work spanned <strong>four platforms</strong> (LabNet, Cloud Portal, Airlock, Engineering Support Hub), three content disciplines (UX writing, product documentation, knowledge management), and a team of 3–5 direct reports. Explore each platform below.</p>
+        </div>
+      </div>
+      <div class="subfile-nav">
+        <div class="subfile-nav-head">// four platforms — select to explore</div>
+        <div class="subfile-list">
+          <a class="subfile-item" href="#" data-modal="modal-meta-labs">
+            <span class="sf-icon">&#x1F5C0;</span>meta-labs.md<span class="sf-desc">LabNet · patch management</span>
+          </a>
+          <a class="subfile-item" href="#" data-modal="modal-meta-cloud">
+            <span class="sf-icon">&#x1F5C0;</span>cloud-portal.md<span class="sf-desc">multi-cloud provisioning</span>
+          </a>
+          <a class="subfile-item" href="#" data-modal="modal-meta-airlock">
+            <span class="sf-icon">&#x1F5C0;</span>governance-airlock.md<span class="sf-desc">contextual auth · compliance</span>
+          </a>
+          <a class="subfile-item" href="#" data-modal="modal-meta-esh">
+            <span class="sf-icon">&#x1F5C0;</span>engineering-support-hub.md<span class="sf-desc">LLM-assisted case management</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ETS / NAEP WORK -->
+<div class="modal-overlay" id="modal-naep-work">
+  <div class="modal">
+    <div class="modal-bar">
+      <span class="modal-path">~/jconor-sullivan/career/ets-naep/ux-design-system.md</span>
+      <div class="modal-actions"><button class="modal-btn" data-close>✕ close</button></div>
+    </div>
+    <div class="modal-body">
+      <div class="slabel">Career · ETS / NAEP</div>
+      <div class="modal-prompt">
+        <span class="p-user">jconor</span><span class="p-sep">@</span><span class="p-path">portfolio</span><span class="p-sep">:~$</span>
+        <span class="p-cmd"> cat career/ets-naep/ux-design-system.md</span>
+      </div>
+      <div class="box">
+        <div class="box-head">
+          <span class="box-title">Educational Testing Service · Senior UX &amp; Technical Writer</span>
+          <span class="box-meta">career/ets-naep/ · NAEP contract · ~2 years</span>
+        </div>
+        <div class="box-body">
+          <p>Served as Senior UX Writer and technical writer on the <strong>National Assessment of Educational Progress (NAEP)</strong> contract at ETS — the national program known as "The Nation's Report Card," assessing student performance across the United States at grades 4, 8, and 12.</p>
+          <p>My primary responsibility was the <strong>eNAEP platform</strong> — the digital assessment environment used by students nationwide. I co-authored and maintained the NAEP Style Guide, a living design system that served as the authoritative specification for all student-facing UI across the platform. This was documentation architecture at assessment scale: defining how every interactive element behaves, communicates, and adapts across item types, accessibility modes, and device environments.</p>
+          <p>The work required deep fluency in both <strong>UX writing principles</strong> and <strong>technical documentation standards</strong> — producing specifications precise enough for engineering implementation while remaining legible to designers, accessibility specialists, and program stakeholders.</p>
+          <ul>
+            <li>Co-authored the NAEP Style Guide: component specs, interaction patterns, accessibility standards</li>
+            <li>Documented UI elements across 8 domains: basics, UI components, features, stimuli, response types, instruction, environments</li>
+            <li>Wrote specifications for accessibility modes, text-to-speech integration, and keyboard navigation</li>
+            <li>Collaborated with engineers and designers to validate specs against live implementation</li>
+            <li>Maintained version history and changelog for the living design system</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag">UX writing</span><span class="tag">design systems</span><span class="tag">accessibility</span>
+          <span class="tag">technical writing</span><span class="tag">education technology</span><span class="tag">assessment</span>
+        </div>
+        <div class="box-link-row">
+          <a class="box-link" href="#" data-modal="modal-naep-artifact">→ view design system artifact</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ARCHIVE -->
+<div class="modal-overlay" id="modal-archive">
+  <div class="modal">
+    <div class="modal-bar">
+      <span class="modal-path">~/jconor-sullivan/career/career-archive/</span>
+      <div class="modal-actions"><button class="modal-btn" data-close>✕ close</button></div>
+    </div>
+    <div class="modal-body">
+      <div class="slabel">Career · Archive</div>
+      <div class="modal-prompt">
+        <span class="p-user">jconor</span><span class="p-sep">@</span><span class="p-path">portfolio</span><span class="p-sep">:~$</span>
+        <span class="p-cmd"> ls career/career-archive/</span>
+      </div>
+      <div class="box">
+        <div class="box-head">
+          <span class="box-title">Council for Aid to Education (under RAND) · Managing Editor</span>
+          <span class="box-meta">career/career-archive/rand-cae/ · 8 years</span>
+        </div>
+        <div class="box-body">
+          <p>Managing editor for a national nonprofit education research organization operating under RAND Corporation. Oversaw editorial production, knowledge management, and publication systems for policy research, assessment programs, and institutional reports. Built expertise in structuring and governing large-scale information systems for research audiences.</p>
+        </div>
+        <div class="tags">
+          <span class="tag">editorial systems</span><span class="tag">knowledge management</span><span class="tag">research publishing</span>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head">
+          <span class="box-title">W.W. Norton &amp; Company · Editor</span>
+          <span class="box-meta">career/career-archive/ww-norton/ · 5 years</span>
+        </div>
+        <div class="box-body">
+          <p>Editor at one of the largest independent publishers in the United States. Built foundational expertise in structured editorial systems, information hierarchy, and the craft of making complex ideas accessible at scale. This discipline — the practice of shaping, structuring, and clarifying complex knowledge — underlies all subsequent technical, UX, and AI architecture work.</p>
+        </div>
+        <div class="tags">
+          <span class="tag">editorial</span><span class="tag">publishing</span><span class="tag">information hierarchy</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  function openModal(id) {
+    // close any open modals first
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+    const target = document.getElementById(id);
+    if (target) {
+      target.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeAll() {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+    document.body.style.overflow = '';
+  }
+
+  // open via data-modal (tree links + internal links)
+  document.addEventListener('click', e => {
+    const opener = e.target.closest('[data-modal]');
+    if (opener) {
+      e.preventDefault();
+      openModal(opener.dataset.modal);
+    }
+  });
+
+  // close via data-close button
+  document.addEventListener('click', e => {
+    if (e.target.closest('[data-close]')) {
+      closeAll();
+    }
+  });
+
+  // close via overlay backdrop
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) closeAll();
+    });
+  });
+
+  // close via Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeAll();
+  });
+</script>
+
+</body>
+</html>

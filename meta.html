@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Role @ Meta</title>
+  <style>
+    :root {
+      --primary: #1a73e8;
+      --dark: #202124;
+      --muted: #5f6368;
+      --light-bg: #f8f9fa;
+      --border: #dadce0;
+      --accent-labs: #0d652d;
+      --accent-cloud: #1a73e8;
+      --accent-governance: #b06000;
+      --accent-enablement: #7b1fa2;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Google Sans', 'Segoe UI', Roboto, sans-serif;
+      color: var(--dark);
+      line-height: 1.7;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    /* ROLE HEADER */
+    .role-header {
+      margin-bottom: 40px;
+      padding-bottom: 28px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .role-header h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .role-header .role-title {
+      font-size: 1.15rem;
+      color: var(--primary);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .role-header .role-meta {
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    /* INTRO */
+    .intro {
+      font-size: 1.05rem;
+      color: var(--dark);
+      margin-bottom: 48px;
+      line-height: 1.8;
+    }
+
+    /* DOMAIN SECTIONS */
+    .project-section {
+      margin-bottom: 48px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 3px solid var(--border);
+    }
+
+    .section-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .icon-labs { background-color: var(--accent-labs); }
+    .icon-cloud { background-color: var(--accent-cloud); }
+    .icon-governance { background-color: var(--accent-governance); }
+    .icon-enablement { background-color: var(--accent-enablement); }
+
+    .section-header h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    .section-subtitle {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .narrative {
+      margin-bottom: 20px;
+      font-size: 1rem;
+      line-height: 1.8;
+    }
+
+    .contributions {
+      background: var(--light-bg);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 16px;
+    }
+
+    .contributions h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .contributions ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .contributions li {
+      padding: 6px 0;
+      padding-left: 20px;
+      position: relative;
+      font-size: 0.95rem;
+    }
+
+    .contributions li::before {
+      content: "\2014";
+      position: absolute;
+      left: 0;
+      color: var(--muted);
+    }
+
+    .impact-callout {
+      background: white;
+      border-left: 4px solid var(--primary);
+      padding: 16px 20px;
+      border-radius: 0 8px 8px 0;
+      margin-top: 16px;
+      font-size: 0.95rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* BACK LINK */
+    .back-link {
+      display: inline-block;
+      margin-bottom: 24px;
+      font-size: 0.9rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <a class="back-link" href="#">&larr; Back to Portfolio</a>
+
+  <div class="role-header">
+    <h1>Role @ Meta</h1>
+    <div class="role-title">UX Writer &amp; Product Documentation Strategist</div>
+    <div class="role-meta">Enterprise Infrastructure Systems &bull; Product Docs &bull; UX Writing &bull; Technical Content Management</div>
+  </div>
+
+  <div class="intro">
+    <p>During my time at Meta, I served as a UX writer, product documentation author, and technical content strategist across several enterprise infrastructure platforms. My work sat at the intersection of complex internal tooling and the people who relied on it every day. I was responsible for product documentation, in-product UX writing, and technical wiki management — making powerful systems approachable through clear content that teams could actually use.</p>
+    <br>
+    <p>Below is a summary of my contributions, organized by the four domains I supported.</p>
+  </div>
+
+  <!-- META LABS -->
+  <section class="project-section">
+    <div class="section-header">
+      <div class="section-icon icon-labs">&#9881;</div>
+      <div>
+        <h2>Meta Labs</h2>
+        <span class="section-subtitle">LabNet &amp; Patch Management Support</span>
+      </div>
+    </div>
+
+    <p class="narrative">
+      Meta's engineering labs are sprawling, multi-site environments where hardware teams prototype, test, and validate new products. Managing that complexity — provisioning labs, registering devices, maintaining compliance — requires tools that work as reliably as the teams using them. That's where LabNet came in, and where I made my mark.
+    </p>
+    <p class="narrative">
+      As a core contributor to LabNet, I owned the product documentation that helped lab owners and administrators navigate the full lifecycle of their environments. From onboarding guides and feature walkthroughs to admin tooling docs and developer references, I built a content ecosystem that made a sophisticated platform feel intuitive. When new users arrived, my documentation was their first stop. When experienced admins needed to troubleshoot, my runbooks gave them the answers without filing a ticket.
+    </p>
+    <p class="narrative">
+      I also played a key role in Patch Management Support Waves 1 and 2, authoring user guides for Linux workstations, Windows and macOS laptops, and managed servers. These guides walked users step-by-step through device enrollment, compliance verification, and troubleshooting — bridging the gap between LabNet's backend enforcement and the people using the devices. I created platform-agnostic runbooks for common failure scenarios like certificate issues and device-joining errors, and wrote dedicated instructions for updating the Lab Compliance Manager tool across different lab types and network environments.
+    </p>
+
+    <div class="contributions">
+      <h3>Key Contributions</h3>
+      <ul>
+        <li>Authored and maintained LabNet's product documentation, including user guides, reference docs, FAQs, and developer onboarding materials</li>
+        <li>Documented UI features such as device registration, allowlisting, SEV banners, test mode, and email communication workflows</li>
+        <li>Created admin-facing documentation for monitoring, auditing, bulk task creation, and exception handling</li>
+        <li>Wrote user guides for Patch Management Support across Linux, Windows, macOS, and managed servers</li>
+        <li>Built platform-agnostic troubleshooting runbooks for certificate failures, device-joining issues, and Lab Compliance Manager updates</li>
+        <li>Contributed to feature development including lab provisioning enhancements, device management, and request tracking</li>
+      </ul>
+    </div>
+
+    <div class="impact-callout">
+      My documentation reduced manual intervention in lab management, empowered self-service for lab owners, and ensured compliance and onboarding processes were accessible to users regardless of their technical background.
+    </div>
+  </section>
+
+  <!-- META CLOUD -->
+  <section class="project-section">
+    <div class="section-header">
+      <div class="section-icon icon-cloud">&#9729;</div>
+      <div>
+        <h2>Meta Cloud</h2>
+        <span class="section-subtitle">Cloud Portal</span>
+      </div>
+    </div>
+
+    <p class="narrative">
+      Managing cloud infrastructure at Meta's scale means coordinating across AWS, Azure, and GCP — each with its own provisioning rules, compliance requirements, and approval workflows. Cloud Portal was built to centralize all of that into one platform, and my job was to make sure the people using it never felt lost.
+    </p>
+    <p class="narrative">
+      I authored the onboarding and technical documentation that helped internal teams navigate cloud account creation, lifecycle management, and compliance reviews. Whether someone was spinning up their first cloud account or managing policy exceptions, my documentation provided the clarity they needed to move confidently through self-service workflows. I also contributed to feature development — building and refining the portal's capabilities for multi-cloud provisioning, automated approvals, and integration with Meta's internal authentication and budget systems.
+    </p>
+
+    <div class="contributions">
+      <h3>Key Contributions</h3>
+      <ul>
+        <li>Authored onboarding documentation and technical guides for cloud account provisioning across AWS, Azure, and GCP</li>
+        <li>Documented self-service workflows for account creation, lifecycle management, and compliance reviews</li>
+        <li>Created reference materials for the cloud exception process and permanent account setup</li>
+        <li>Developed new features and resolved bugs to support multi-cloud provisioning and automated approvals</li>
+        <li>Integrated backend services with Meta's internal workflow, authentication, and budget tracking systems</li>
+        <li>Maintained the Cloud Portal wiki and workstream documentation for the broader team</li>
+      </ul>
+    </div>
+
+    <div class="impact-callout">
+      My work streamlined cloud operations for Meta's infrastructure teams, making multi-cloud provisioning more accessible and ensuring compliance workflows were clear, efficient, and well-documented.
+    </div>
+  </section>
+
+  <!-- GOVERNANCE & COMPLIANCE -->
+  <section class="project-section">
+    <div class="section-header">
+      <div class="section-icon icon-governance">&#128274;</div>
+      <div>
+        <h2>Governance &amp; Compliance</h2>
+        <span class="section-subtitle">Airlock</span>
+      </div>
+    </div>
+
+    <p class="narrative">
+      Security at Meta isn't optional — every device that accesses internal resources has to prove it's compliant. Airlock is the platform that makes that happen, enforcing contextual authentication policies, managing device security controls, and guiding users through remediation when something falls out of compliance. It replaced the legacy iAuth system and became the gateway to Meta's internal tools for every employee.
+    </p>
+    <p class="narrative">
+      My contributions to Airlock spanned both the documentation layer and the product itself. I authored high-level design and developer guides that outlined Airlock's architecture, workflows, and integration points — giving developers, support teams, and end users a clear map of how the system worked. I documented remediation steps for common compliance failures and wrote guides for the admin and debug interfaces that support teams relied on daily. On the product side, I contributed to feature development for policy enforcement, remediation, and exemption workflows, and supported the rollout of Airlock controls for Linux devices, including disk encryption and OS version compliance.
+    </p>
+
+    <div class="contributions">
+      <h3>Key Contributions</h3>
+      <ul>
+        <li>Authored and maintained high-level design guides, developer documentation, and architecture references for Airlock</li>
+        <li>Documented remediation and exemption request workflows for common compliance failures</li>
+        <li>Created guides for Airlock Admin, Manage Exemptions, and Debug interfaces used by support teams</li>
+        <li>Contributed to feature development for policy enforcement, remediation, and exemption workflows</li>
+        <li>Supported Linux client enforcement rollout, including disk encryption and OS version compliance</li>
+        <li>Participated in reliability reviews, wargaming, and rollout controls for safe policy enforcement at scale</li>
+        <li>Integrated backend services with Palisade and Access Manager for exemption workflows</li>
+      </ul>
+    </div>
+
+    <div class="impact-callout">
+      My work raised the security bar for Meta's client fleet while keeping the experience user-friendly. Automated remediation and clear documentation reduced support burden and helped users resolve compliance issues independently.
+    </div>
+  </section>
+
+  <!-- ENGINEERING ENABLEMENT -->
+  <section class="project-section">
+    <div class="section-header">
+      <div class="section-icon icon-enablement">&#9889;</div>
+      <div>
+        <h2>Engineering Enablement</h2>
+        <span class="section-subtitle">Engineering Support Hub (ESH) &amp; FAQ Authoring Agent</span>
+      </div>
+    </div>
+
+    <p class="narrative">
+      When engineers hit a wall — a broken build, a confusing tool, an urgent production issue — they need fast, reliable support. Engineering Support Hub (ESH) was Meta's centralized platform for managing those support cases, integrating directly with Workplace group posts and providing analytics-driven workflows for support specialists. My role was to make sure both sides of the support experience — the engineers asking for help and the specialists providing it — had the content and tools they needed.
+    </p>
+    <p class="narrative">
+      I authored the product documentation that covered everything from creating and managing support cases to onboarding external request groups and configuring advanced analytics. But my most impactful contribution was helping bring AI into the support workflow. I designed and documented the SEP form workflow, which prioritized engineering posts and improved LLM-generated suggestions for case creators. I also contributed to integrating Metamate as the FAQ authoring agent within ESH, enabling automated FAQ generation that reduced manual workload and improved deflection rates for common questions.
+    </p>
+
+    <div class="contributions">
+      <h3>Key Contributions</h3>
+      <ul>
+        <li>Authored product documentation for ESH, including user guides, onboarding instructions, and technical runbooks</li>
+        <li>Documented case management workflows for assignment, escalation, resolution, and Oncall Hub integration</li>
+        <li>Created onboarding guides for external request groups (Bugnub, Scuba, Quota Management) with tagging and reporting instructions</li>
+        <li>Designed and documented the SEP form workflow for prioritized engineering support and improved LLM suggestions</li>
+        <li>Contributed to Metamate-powered FAQ authoring agent integration for automated answer generation</li>
+        <li>Supported the next-generation ESH platform release, onboarding 29 teams and resolving ~3,600 cases</li>
+        <li>Helped build the ESH Data Foundation for custom analytics dashboards and automated metadata configuration</li>
+      </ul>
+    </div>
+
+    <div class="impact-callout">
+      My contributions helped ESH save engineers an estimated four hours per week, improved support response quality through LLM-powered suggestions, and expanded the platform's reach across Meta's engineering organization.
+    </div>
+  </section>
+
+</body>
+</html>
