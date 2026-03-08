@@ -1276,20 +1276,41 @@
 
 
 <script>
+  let modalOpen = false;
+
   function openModal(id) {
-    // close any open modals first
     document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
     const target = document.getElementById(id);
     if (target) {
       target.classList.add('open');
       document.body.style.overflow = 'hidden';
+      // Push one history entry per modal session; reuse it when switching modals
+      if (!modalOpen) {
+        history.pushState({ modal: true }, '');
+        modalOpen = true;
+      }
     }
   }
 
-  function closeAll() {
+  function closeAll(fromPopstate = false) {
     document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
     document.body.style.overflow = '';
+    if (modalOpen && !fromPopstate) {
+      modalOpen = false;
+      history.back(); // sync history when closed via button/ESC
+    } else {
+      modalOpen = false;
+    }
   }
+
+  // Back gesture / hardware back button closes modal instead of leaving page
+  window.addEventListener('popstate', () => {
+    if (document.querySelector('.modal-overlay.open')) {
+      closeAll(true);
+    } else {
+      modalOpen = false;
+    }
+  });
 
   // open via data-modal (tree links + internal links)
   document.addEventListener('click', e => {
