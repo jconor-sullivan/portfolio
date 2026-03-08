@@ -373,6 +373,14 @@
     .about-k   { color: var(--muted); min-width: 100px; flex-shrink: 0; }
     .about-v   { color: var(--green); }
 
+    /* ── Desktop: no page scroll — everything fits in viewport ── */
+    @media (min-width: 681px) {
+      html, body { height: 100%; overflow: hidden; }
+      .wrap { height: 100%; }
+      .frame { height: 100%; display: flex; flex-direction: column; overflow: hidden; }
+      .body { flex: 1; overflow-y: auto; min-height: 0; }
+    }
+
     /* ── Mobile header (hidden on desktop) ── */
     .mobile-header { display: none; }
 
