@@ -371,6 +371,63 @@
     .about-row { display: flex; gap: 8px; margin-bottom: 5px; font-size: 0.78rem; }
     .about-k   { color: var(--muted); min-width: 100px; flex-shrink: 0; }
     .about-v   { color: var(--green); }
+
+    /* ── Mobile header (hidden on desktop) ── */
+    .mobile-header { display: none; }
+
+    /* ── Mobile breakpoint ── */
+    @media (max-width: 680px) {
+      body { padding: 12px 10px 60px; font-size: 12px; }
+      .body { padding: 18px 14px 24px; }
+
+      /* swap headers */
+      .ascii-header { display: none; }
+      .mobile-header {
+        display: block;
+        margin-bottom: 16px;
+        line-height: 1.7;
+      }
+      .mob-name {
+        color: var(--cyan); font-weight: 700; font-size: 1.05rem;
+        letter-spacing: 0.04em;
+        text-shadow: 0 0 14px var(--cyan-glow);
+        margin-bottom: 2px;
+      }
+      .mob-tag {
+        color: var(--magenta); font-size: 0.72rem;
+        text-shadow: 0 0 8px var(--mag-glow);
+        margin-bottom: 6px;
+      }
+      .mob-divider { color: var(--cyan); opacity: 0.4; margin-bottom: 6px; }
+      .mob-row { font-size: 0.72rem; display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 2px; }
+
+      /* stack avatar below header */
+      .header-area { flex-direction: column; align-items: flex-start; gap: 14px; margin-bottom: 16px; }
+      .avatar-img { max-height: 80px; }
+      .avatar-label { font-size: 0.6rem; }
+
+      /* scrollable tree */
+      .tree-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .tree { font-size: 11px; }
+
+      /* nav hint */
+      .nav-hint p { font-size: 0.68rem; }
+
+      /* full-screen modals */
+      .modal-overlay { padding: 0; align-items: flex-start; }
+      .modal {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 100vh;
+        border-radius: 0;
+        margin: 0;
+      }
+      .modal-path { font-size: 0.6rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 55vw; }
+      .modal-body { padding: 16px 14px; }
+      .box { margin-bottom: 12px; }
+      .box-head { padding: 10px 14px; }
+      .box-body { padding: 12px 14px; }
+    }
   </style>
 </head>
 <body>
@@ -396,6 +453,16 @@
 ║  </span><span class="hmk">research   </span><span class="hmv">PhD (expected 2029) · Information Science · Univ. at Buffalo</span><span class="hbox">  ║
 ║  </span><span class="hmk">location   </span><span class="hmv">Red Hook; Brooklyn, NY</span><span class="hbox">                                        ║
 ╚══════════════════════════════════════════════════════════════════════╝</span></div>
+
+      <!-- MOBILE HEADER (shown only on small screens) -->
+      <div class="mobile-header">
+        <div class="mob-name">J. Conor Sullivan</div>
+        <div class="mob-tag">Content Architecture * UX System Design * AI Documentation Ontology</div>
+        <div class="mob-divider">────────────────────────────────</div>
+        <div class="mob-row"><span class="hmk">currently&nbsp;</span><span class="hmv">Principal Technical Content Designer · Meta InfraSec</span></div>
+        <div class="mob-row"><span class="hmk">research&nbsp;&nbsp;</span><span class="hmv">PhD (expected 2029) · Information Science · UB</span></div>
+        <div class="mob-row"><span class="hmk">location&nbsp;&nbsp;</span><span class="hmv">Red Hook, Brooklyn NY</span></div>
+      </div>
 
       <!-- PIXEL AVATAR -->
       <a class="avatar-link" href="https://www.linkedin.com/in/jconorsullivan/" target="_blank" rel="noopener">
