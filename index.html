@@ -34,7 +34,7 @@
       color: var(--text);
       font-family: var(--font);
       min-height: 100vh;
-      padding: 40px 24px 80px;
+      padding: 24px 24px 48px;
       font-size: 13px;
       line-height: 1.6;
       overflow-x: hidden;
@@ -148,13 +148,13 @@
     .contact-v a { color: var(--cyan); text-decoration: none; }
     .contact-v a:hover { text-decoration: underline; }
 
-    .body { padding: 36px 40px 44px; }
+    .body { padding: 24px 32px 32px; }
 
     /* ── ASCII header ── */
     .ascii-header {
       white-space: pre;
-      line-height: 1.5;
-      margin-bottom: 28px;
+      line-height: 1.45;
+      margin-bottom: 0;
       font-size: 0.8rem;
     }
     .hbox  { color: var(--cyan); text-shadow: 0 0 8px var(--cyan-glow); }
@@ -171,7 +171,7 @@
       display: flex;
       align-items: center;
       gap: 28px;
-      margin-bottom: 28px;
+      margin-bottom: 16px;
     }
     .ascii-header { flex: 1; margin-bottom: 0; }
 
@@ -209,14 +209,14 @@
 
     /* ── Nav hint ── */
     .nav-hint {
-      margin-bottom: 24px;
+      margin-bottom: 14px;
       border-left: 2px solid var(--border);
       padding-left: 14px;
     }
     .nav-hint p {
       font-size: 0.75rem;
       color: var(--yellow);
-      line-height: 1.9;
+      line-height: 1.7;
     }
     .nav-hint .hl { color: var(--cyan); }
 
@@ -228,11 +228,11 @@
     .p-cmd  { color: var(--text); }
 
     /* ── Tree ── */
-    .tree-wrap { margin-bottom: 20px; }
+    .tree-wrap { margin-bottom: 12px; }
     .tree {
       white-space: pre;
       font-size: 0.82rem;
-      line-height: 1.75;
+      line-height: 1.6;
     }
     .tree .conn  { color: var(--muted); }
     .tree .root  { color: var(--yellow); font-weight: 700; text-shadow: 0 0 8px rgba(232,197,71,0.4); }
@@ -586,6 +586,7 @@
       <div class="nav-hint">
         <p>// this filesystem is a map of my career, research, and design work</p>
         <p>// select any <span class="hl">&#x1F5C0;</span> folder or file link to open it as a panel &nbsp;·&nbsp; <span class="hl">[ESC]</span> or select Close to dismiss</p>
+        <p>// the command line below is live — type any question about my background and hit <span class="hl">Enter</span></p>
       </div>
 
       <!-- PROMPT -->
@@ -597,19 +598,14 @@
       <!-- TREE -->
       <div class="tree-wrap">
         <div class="tree"><span class="root">~/jconor-sullivan/</span>
-<span class="conn">│</span>
 <span class="conn">├── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-about">about_me.md</a>       <span class="cmt"># who i am</span>
-<span class="conn">│</span>
 <span class="conn">├── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-cv">cv.md</a>       <span class="cmt"># full curriculum vitae</span>
-<span class="conn">│</span>
 <span class="conn">├── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-artifacts">ux-architecture-samples/</a>       <span class="cmt"># information architecture · design systems</span>
 <span class="conn">│   ├── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-agent" class="l2-link">compliance-agent-prototype/</a>
 <span class="conn">│   └── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-naep-artifact" class="l2-link">naep-ux-design-system/</a>
-<span class="conn">│</span>
 <span class="conn">├── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-research">research-background/</a>       <span class="cmt"># phd * masters * information systems and psychology</span>
 <span class="conn">│   ├── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-research" class="l2-link">phd-information-science.md</a>
 <span class="conn">│   └── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-masters" class="l2-link">masters-educational-psychology.md</a>
-<span class="conn">│</span>
 <span class="conn">└── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-meta">career/</a>       <span class="cmt"># ux systems * content design * technical writing * publishing</span>
 <span class="conn">    ├── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-meta" class="l2-link">meta/</a>
 <span class="conn">    │   ├── </span><span class="fi">&#x1F5C0;</span> <a href="#" data-modal="modal-meta-infosec" class="file-link">infosec-content-architecture.md</a>
