@@ -80,6 +80,11 @@
       align-items: center;
     }
     .panel-bar .path { color: var(--cyan); }
+    .panel-bar-version { }
+    @media (max-width: 600px) {
+      .panel-bar-version { display: none; }
+      .docs-btn { font-size: 0.65rem; padding: 2px 6px; }
+    }
     .docs-btn {
       background: none; border: 1px solid rgba(0,212,255,0.3);
       color: var(--cyan); font-family: var(--font); font-size: 0.7rem;
@@ -542,8 +547,8 @@
   <div class="frame">
     <div class="panel-bar">
       <span><span class="path">~/jconor-sullivan</span></span>
-      <span style="display:flex;align-items:center;gap:16px;">
-        <span>portfolio · v1.0</span>
+      <span style="display:flex;align-items:center;gap:10px;flex-wrap:nowrap;">
+        <span class="panel-bar-version">portfolio · v1.0</span>
         <button class="docs-btn" data-modal="modal-welcome">[ welcome ]</button>
         <button class="docs-btn" data-modal="modal-docs">[ docs ]</button>
       </span>
