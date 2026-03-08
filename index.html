@@ -80,6 +80,51 @@
       align-items: center;
     }
     .panel-bar .path { color: var(--cyan); }
+    .docs-btn {
+      background: none; border: 1px solid rgba(0,212,255,0.3);
+      color: var(--cyan); font-family: var(--font); font-size: 0.7rem;
+      padding: 2px 10px; cursor: pointer; border-radius: 2px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      text-decoration: none;
+    }
+    .docs-btn:hover { border-color: var(--cyan); box-shadow: 0 0 8px var(--cyan-glow); }
+
+    /* ── Annotated diagram ── */
+    .anno-wrap { position: relative; margin: 24px 0; }
+    .anno-diagram {
+      border: 1px solid var(--border); border-radius: 2px;
+      background: var(--bg-2); padding: 18px;
+      font-size: 0.72rem; line-height: 1.7; color: var(--muted);
+      white-space: pre;
+    }
+    .anno-hl { color: var(--cyan); }
+    .anno-hl-m { color: var(--magenta); }
+    .anno-callout {
+      display: flex; align-items: flex-start; gap: 10px;
+      margin-bottom: 10px; font-size: 0.8rem;
+    }
+    .anno-num {
+      flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%;
+      background: var(--cyan-dim); border: 1px solid var(--cyan);
+      color: var(--cyan); font-size: 0.65rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      text-shadow: 0 0 6px var(--cyan-glow);
+    }
+    .anno-num-m {
+      flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%;
+      background: var(--mag-dim); border: 1px solid var(--magenta);
+      color: var(--magenta); font-size: 0.65rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      text-shadow: 0 0 6px var(--mag-glow);
+    }
+    .anno-text { color: var(--text); line-height: 1.6; }
+    .anno-text strong { color: var(--cyan); font-weight: 400; }
+    .anno-text-m strong { color: var(--magenta); font-weight: 400; }
+    .contact-row { display: flex; gap: 8px; margin-bottom: 8px; font-size: 0.82rem; }
+    .contact-k { color: var(--muted); min-width: 80px; }
+    .contact-v { color: var(--text); }
+    .contact-v a { color: var(--cyan); text-decoration: none; }
+    .contact-v a:hover { text-decoration: underline; }
 
     .body { padding: 36px 40px 44px; }
 
@@ -475,7 +520,10 @@
   <div class="frame">
     <div class="panel-bar">
       <span><span class="path">~/jconor-sullivan</span></span>
-      <span>portfolio · v1.0</span>
+      <span style="display:flex;align-items:center;gap:16px;">
+        <span>portfolio · v1.0</span>
+        <button class="docs-btn" data-modal="modal-docs">[ docs ]</button>
+      </span>
     </div>
 
     <div class="body">
@@ -590,6 +638,126 @@
   </div>
 
 </div><!-- /wrap -->
+
+<!-- ════════════════════════════════════════════════════════════
+     WELCOME MODAL
+════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-welcome">
+  <div class="modal" style="max-width:600px;">
+    <div class="modal-bar">
+      <span class="modal-path">~/jconor-sullivan/README.md</span>
+      <div class="modal-actions"><button class="modal-btn" data-close>✕ close</button></div>
+    </div>
+    <div class="modal-body">
+      <div class="slabel">Welcome</div>
+      <div class="modal-prompt">
+        <span class="p-user">jconor</span><span class="p-sep">@</span><span class="p-path">portfolio</span><span class="p-sep">:~$</span>
+        <span class="p-cmd"> cat README.md</span>
+      </div>
+      <div class="box">
+        <div class="box-head">
+          <span class="box-title">This portfolio is the artifact.</span>
+        </div>
+        <div class="box-body">
+          <p>What you're looking at isn't just a résumé — it's a working demonstration of the kind of systems I design. The CLI aesthetic, the folder hierarchy as navigation, the layered information architecture: these reflect how I think about structuring complex information for human beings.</p>
+          <p>I build documentation systems, UX frameworks, and behavioral layers for AI and enterprise products. This portfolio is built the same way I'd build any of those — with intention, structure, and a clear mental model of the user.</p>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head"><span class="box-title">How to navigate</span></div>
+        <div class="box-body">
+          <ul>
+            <li><strong>Click any folder or file</strong> in the tree to open a detailed panel about that work</li>
+            <li><strong>Type into the command line</strong> at the bottom of the page to ask questions about my background — it's connected to an AI that knows my full CV</li>
+            <li><strong>[ docs ]</strong> in the top-right corner explains the portfolio's structure in detail</li>
+          </ul>
+        </div>
+      </div>
+      <div style="text-align:right;margin-top:8px;">
+        <button class="modal-btn" data-close style="font-size:0.78rem;padding:4px 16px;">→ start exploring</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     DOCS MODAL
+════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-docs">
+  <div class="modal" style="max-width:720px;">
+    <div class="modal-bar">
+      <span class="modal-path">~/jconor-sullivan/docs/how-this-works.md</span>
+      <div class="modal-actions"><button class="modal-btn" data-close>✕ close</button></div>
+    </div>
+    <div class="modal-body">
+      <div class="slabel">Portfolio Documentation</div>
+      <div class="modal-prompt">
+        <span class="p-user">jconor</span><span class="p-sep">@</span><span class="p-path">portfolio</span><span class="p-sep">:~$</span>
+        <span class="p-cmd"> cat docs/how-this-works.md</span>
+      </div>
+
+      <div class="box">
+        <div class="box-head"><span class="box-title">Design intent</span></div>
+        <div class="box-body">
+          <p>This portfolio is itself a UX architecture sample. The interface is modeled on a developer terminal — using a filesystem metaphor to organize career history, research, and design work as navigable nodes. Every structural decision (folder hierarchy, modal panels, CLI prompt) reflects how I approach information architecture problems professionally.</p>
+        </div>
+      </div>
+
+      <!-- Annotated diagram -->
+      <div class="box">
+        <div class="box-head"><span class="box-title">Annotated interface map</span></div>
+        <div class="box-body" style="padding-bottom:4px;">
+          <div class="anno-diagram">┌─────────────────────────────────────────────────────────┐
+│ <span class="anno-hl">~/jconor-sullivan</span>                    <span class="anno-hl">[ docs ]</span> ← <span class="anno-hl">①</span>        │  panel bar
+├─────────────────────────────────────────────────────────┤
+│ <span class="anno-hl">╔═══════════════════════════════════════════╗</span>           │
+│ <span class="anno-hl">║  J. Conor Sullivan                        ║</span> ← <span class="anno-hl">②</span>      │  identity header
+│ <span class="anno-hl">╚═══════════════════════════════════════════╝</span>           │
+│                                                         │
+│  <span class="anno-hl-m">├── 🗀 about_me.md</span>          ← <span class="anno-hl-m">③</span>                    │  clickable tree nodes
+│  <span class="anno-hl-m">├── 🗀 ux-architecture-samples/</span>                         │
+│  <span class="anno-hl-m">└── 🗀 career/</span>                                          │
+│      <span class="anno-hl-m">├── 🗀 meta/</span>                                        │
+│      <span class="anno-hl-m">└── 🗀 ets-naep/</span>                                    │
+│                                                         │
+│  <span class="anno-hl">jconor@portfolio:~$</span> <span class="anno-hl-m">[_________________________]</span> ← <span class="anno-hl-m">④</span> │  AI query CLI
+└─────────────────────────────────────────────────────────┘</div>
+          <div style="margin-top:18px;display:flex;flex-direction:column;gap:10px;">
+            <div class="anno-callout">
+              <div class="anno-num">1</div>
+              <div class="anno-text"><strong>[ docs ]</strong> — You're reading it. Opens this panel explaining how the portfolio is structured.</div>
+            </div>
+            <div class="anno-callout">
+              <div class="anno-num">2</div>
+              <div class="anno-text"><strong>Identity header</strong> — ASCII box format displaying current role, research status, and location. Styled to mirror a terminal process readout.</div>
+            </div>
+            <div class="anno-callout">
+              <div class="anno-num anno-num-m">3</div>
+              <div class="anno-text anno-text-m"><strong>File tree nodes</strong> — Click any folder or file to open a detailed panel. Top-level folders group by domain (work, research, artifacts). Nested files represent individual projects or roles.</div>
+            </div>
+            <div class="anno-callout">
+              <div class="anno-num anno-num-m">4</div>
+              <div class="anno-text anno-text-m"><strong>AI command line</strong> — Type any question about my background and hit Enter. Powered by Gemini via a serverless proxy — the AI has been given my full CV as its knowledge base.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact -->
+      <div class="box">
+        <div class="box-head"><span class="box-title">Contact</span></div>
+        <div class="box-body">
+          <div class="contact-row"><span class="contact-k">email</span><span class="contact-v"><a href="mailto:jconor.sullivan@gmail.com">jconor.sullivan@gmail.com</a></span></div>
+          <div class="contact-row"><span class="contact-k">phone</span><span class="contact-v">646.504.0951</span></div>
+          <div class="contact-row"><span class="contact-k">location</span><span class="contact-v">Red Hook, Brooklyn, NY</span></div>
+          <div class="contact-row"><span class="contact-k">linkedin</span><span class="contact-v"><a href="https://www.linkedin.com/in/jconorsullivan/" target="_blank">linkedin.com/in/jconorsullivan</a></span></div>
+          <div class="contact-row"><span class="contact-k">github</span><span class="contact-v"><a href="https://github.com/jconor-sullivan" target="_blank">github.com/jconor-sullivan</a></span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <!-- ════════════════════════════════════════════════════════════
      MODALS
@@ -1366,6 +1534,12 @@
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeAll();
   });
+
+  // ── Welcome modal on first visit ─────────────────────────────
+  if (!sessionStorage.getItem('welcomed')) {
+    sessionStorage.setItem('welcomed', '1');
+    openModal('modal-welcome');
+  }
 
   // ── Gemini CLI query ──────────────────────────────────────────
   const GEMINI_URL = 'https://portfolioagent.jconor-sullivan.workers.dev';
