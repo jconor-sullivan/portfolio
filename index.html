@@ -414,16 +414,30 @@
       .nav-hint p { font-size: 0.68rem; }
 
       /* full-screen modals */
-      .modal-overlay { padding: 0; align-items: flex-start; }
+      .modal-overlay {
+        padding: 0;
+        align-items: flex-start;
+        height: 100dvh;
+      }
       .modal {
         width: 100% !important;
         max-width: 100% !important;
-        max-height: 100vh;
+        height: 100dvh;
+        max-height: 100dvh;
         border-radius: 0;
         margin: 0;
+        transform: none !important;
+        display: flex;
+        flex-direction: column;
       }
-      .modal-path { font-size: 0.6rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 55vw; }
-      .modal-body { padding: 16px 14px; }
+      .modal-bar { flex-shrink: 0; }
+      .modal-body {
+        padding: 16px 14px;
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .modal-path { font-size: 0.6rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 52vw; }
       .box { margin-bottom: 12px; }
       .box-head { padding: 10px 14px; }
       .box-body { padding: 12px 14px; }
