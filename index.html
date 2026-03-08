@@ -554,10 +554,36 @@
 </div>
       </div>
 
-      <!-- Final prompt -->
-      <div style="margin-top:8px;">
-        <span class="p-user">jconor</span><span class="p-sep">@</span><span class="p-path">portfolio</span><span class="p-sep">:~$</span>
-        <span class="p-cmd"> </span><span class="cursor"></span>
+      <!-- Final prompt — AI query CLI -->
+      <div style="margin-top:8px;" id="cli-form-wrap">
+        <div style="display:flex;align-items:center;gap:0;">
+          <span class="p-user">jconor</span><span class="p-sep">@</span><span class="p-path">portfolio</span><span class="p-sep">:~$</span>
+          <input
+            id="cli-input"
+            type="text"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="ask me anything about my background…"
+            style="
+              flex:1;
+              background:transparent;
+              border:none;
+              outline:none;
+              color:var(--text);
+              font-family:var(--font);
+              font-size:0.8rem;
+              padding:0 0 0 6px;
+              caret-color:var(--cyan);
+            "
+          />
+        </div>
+        <div id="cli-output" style="margin-top:12px;display:none;">
+          <div style="color:var(--muted);font-size:0.75rem;margin-bottom:6px;" id="cli-query-echo"></div>
+          <div id="cli-response" style="color:var(--text);font-size:0.8rem;line-height:1.8;white-space:pre-wrap;border-left:2px solid var(--cyan);padding-left:12px;"></div>
+        </div>
+        <div id="cli-thinking" style="display:none;color:var(--muted);font-size:0.78rem;margin-top:10px;">
+          <span class="cursor" style="margin-right:6px;"></span>processing query…
+        </div>
       </div>
 
     </div>
@@ -1339,6 +1365,78 @@
   // close via Escape
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeAll();
+  });
+
+  // ── Gemini CLI query ──────────────────────────────────────────
+  const GEMINI_KEY = 'AIzaSyAxtjLv_atsMSd8ZXjCvphxWQxfWWhbV5s';
+  const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+
+  const SYSTEM_PROMPT = `You are an AI assistant embedded in J. Conor Sullivan's personal portfolio website. Answer visitor questions about Conor's background, career, skills, and work — concisely and in plain text (no markdown). Stay on topic; if asked something unrelated to Conor, politely redirect.
+
+KEY FACTS ABOUT CONOR:
+- Principal Technical Content Designer at Meta InfraSec Product & Design for 4.5 years (via consulting group); managed 3–5 direct reports plus a bench of contractors
+- PhD candidate, Information Science, University at Buffalo (remote, based in Brooklyn, NY); research focus: knowledge organization, agent system design, HCI, documentation theory
+- MS in Educational Psychology — cognitive load theory, accessible interface design, assessment validity
+- Senior UX & Technical Writer, ETS / NAEP contract (2 years) — built living design system for eNAEP student-facing UI (live: naepdev.github.io/NAEP-Style-Guide)
+- Managing Editor, Council for Aid to Education under RAND Corporation (8 years)
+- Editor, W.W. Norton & Company (5 years)
+
+REBRANDING / POSITIONING:
+- Moving from "UX writer / content designer" toward Research Scientist · UX Architect · Documentation Systems for AI
+- Core pitch: AI is shifting content roles toward information management and system design; Conor's information architecture background positions him to lead the documentation and behavioral layer of AI and agent systems
+
+FLAGSHIP PROJECT — Compliance Agent Content Design Prototype:
+- Conceived, architected, and prototyped independently at Meta — not from a brief
+- Identified a gap: engineers building agentic systems had no principled framework for the communicative and behavioral layer
+- Models a compliance remediation agent end-to-end: system prompts, voice & tone directives, message templates, quick-action hierarchies across 9 interaction flows
+- Structured explicitly for engineering handoff
+- Live: jconor-sullivan.github.io/AgentWIreframeConcept/
+
+SKILLS & EXPERTISE:
+- Information architecture, documentation systems, content strategy
+- Agent UX, system prompt architecture, interaction flow design
+- UX writing, technical writing, design systems
+- Research, knowledge organization, accessible design`;
+
+  const cliInput = document.getElementById('cli-input');
+  const cliOutput = document.getElementById('cli-output');
+  const cliResponse = document.getElementById('cli-response');
+  const cliQueryEcho = document.getElementById('cli-query-echo');
+  const cliThinking = document.getElementById('cli-thinking');
+
+  cliInput.addEventListener('keydown', async e => {
+    if (e.key !== 'Enter') return;
+    const query = cliInput.value.trim();
+    if (!query) return;
+
+    cliInput.value = '';
+    cliInput.disabled = true;
+    cliOutput.style.display = 'none';
+    cliThinking.style.display = 'block';
+    cliQueryEcho.textContent = `> ${query}`;
+
+    try {
+      const res = await fetch(GEMINI_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ role: 'user', parts: [{ text: query }] }],
+          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] }
+        })
+      });
+      const data = await res.json();
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? 'No response received.';
+      cliResponse.textContent = text;
+      cliOutput.style.display = 'block';
+    } catch (err) {
+      cliResponse.textContent = 'Error reaching Gemini API. Check console for details.';
+      cliOutput.style.display = 'block';
+      console.error(err);
+    } finally {
+      cliThinking.style.display = 'none';
+      cliInput.disabled = false;
+      cliInput.focus();
+    }
   });
 </script>
 
