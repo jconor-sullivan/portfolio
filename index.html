@@ -223,6 +223,7 @@
       color: var(--yellow);
       line-height: 1.7;
     }
+    .nav-hint p:last-child { color: var(--cyan); }
     .nav-hint .hl { color: var(--cyan); }
 
     /* ── Prompt ── */
@@ -591,7 +592,7 @@
       <div class="nav-hint">
         <p>// this filesystem is a map of my career, research, and design work</p>
         <p>// select any <span class="hl">&#x1F5C0;</span> folder or file link to open it as a panel &nbsp;·&nbsp; select <span class="hl">[Close]</span> to dismiss</p>
-        <p>// the command line below is live — type any question about my background and hit <span class="hl">Enter</span></p>
+        <p>// ask any question about my professional or academic experience</p>
       </div>
 
       <!-- PROMPT -->
@@ -630,12 +631,13 @@
       <div style="margin-top:8px;" id="cli-form-wrap">
         <div style="display:flex;align-items:center;gap:0;">
           <span class="p-user">jconor</span><span class="p-sep">@</span><span class="p-path">portfolio</span><span class="p-sep">:~$</span>
+          <span class="cursor" style="margin-left:6px;flex-shrink:0;"></span>
           <input
             id="cli-input"
             type="text"
             autocomplete="off"
             spellcheck="false"
-            placeholder="ask me anything about my background…"
+            placeholder="ask any question about my professional or academic experience"
             style="
               flex:1;
               background:transparent;
@@ -1167,10 +1169,9 @@
       <div class="box">
         <div class="box-head"><span class="box-title">Thesis · TL;DR</span></div>
         <div class="box-body">
-          <p>As national assessments like NAEP move fully digital, students who lack at-home digital fluency — those affected by the <strong>digital divide</strong> or <strong>second digital divide</strong> — are systematically disadvantaged not by what is being tested, but by their inability to navigate the test interface itself. Assistive technology tools exist to level this playing field, but research shows they are chronically underutilized.</p>
-          <p>The thesis asked: can UX writing close that gap? It designed and administered a survey instrument that classified participants by digital literacy status (digital native, first digital divide, second digital divide, or both) using questions about household structure and home computer use — then measured their ability to identify NAEP toolbar assistive technology buttons before and after an A/B UX writing intervention.</p>
-          <p>Two content strategies were tested against each other: one optimized for brevity and label clarity, one for contextual explanation. The study aimed to determine whether a student's digital literacy level predicted their baseline familiarity with AT tools, and whether one writing strategy was more effective than the other at closing the comprehension gap — with particular attention to whether certain strategies worked better for specific digital literacy cohorts.</p>
-          <p>The findings contribute directly to instructional design and assessment accessibility practice — and established the empirical foundation for my ongoing interest in how <strong>information presentation affects cognition and buy-in</strong> in complex digital systems.</p>
+          <p>As assessments like NAEP move fully digital, students affected by the <strong>digital divide</strong> are disadvantaged not by what is being tested, but by their inability to navigate the interface itself. Assistive technology tools exist to level this playing field — but are chronically underutilized.</p>
+          <p>The thesis designed a survey instrument that classified participants by digital literacy status using household structure and computer use data, then measured their ability to identify NAEP toolbar AT buttons before and after an <strong>A/B UX writing intervention</strong>. Two content strategies were compared to determine which better closed the comprehension gap — and whether certain approaches worked differently across digital literacy cohorts.</p>
+          <p>The findings established the empirical foundation for my ongoing focus on how <strong>information presentation affects cognition and buy-in</strong> in complex digital systems.</p>
         </div>
         <div class="tags">
           <span class="tag">educational psychology</span>
