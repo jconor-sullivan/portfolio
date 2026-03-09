@@ -223,7 +223,6 @@
       color: var(--yellow);
       line-height: 1.7;
     }
-    .nav-hint p:last-child { color: var(--cyan); }
     .nav-hint .hl { color: var(--cyan); }
 
     /* ── Prompt ── */
@@ -265,6 +264,7 @@
       animation: blink 1.1s step-end infinite;
     }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    #cli-input::placeholder { color: var(--magenta); opacity: 0.8; }
 
     /* ════════════════════════════════════
        MODAL OVERLAY
