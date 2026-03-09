@@ -1563,6 +1563,7 @@
     } else {
       modalOpen = false;
     }
+    document.getElementById('cli-input').focus();
   }
 
   // Back gesture / hardware back button closes modal instead of leaving page
@@ -1618,6 +1619,8 @@
   if (!sessionStorage.getItem('welcomed')) {
     sessionStorage.setItem('welcomed', '1');
     openModal('modal-welcome');
+  } else {
+    document.getElementById('cli-input').focus();
   }
 
   // ── Gemini CLI query ──────────────────────────────────────────
