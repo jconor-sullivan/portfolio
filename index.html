@@ -1554,6 +1554,7 @@
     if (target) {
       target.classList.add('open');
       document.body.style.overflow = 'hidden';
+      gtag('event', 'modal_open', { modal_id: id });
       // Push one history entry per modal session; reuse it when switching modals
       if (!modalOpen) {
         history.pushState({ modal: true }, '');
@@ -1673,6 +1674,7 @@
     document.getElementById('cli-form-wrap').style.animation = 'none';
     cliThinking.style.display = 'block';
     cliQueryEcho.textContent = `> ${query}`;
+    gtag('event', 'cli_query', { query_text: query });
 
     try {
       const res = await fetch(GEMINI_URL, {
