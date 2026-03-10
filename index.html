@@ -1568,7 +1568,7 @@
     document.body.style.overflow = '';
     if (modalOpen && !fromPopstate) {
       modalOpen = false;
-      history.back(); // sync history when closed via button/ESC
+      history.replaceState(null, document.title); // clear modal state without navigating away
     } else {
       modalOpen = false;
     }
