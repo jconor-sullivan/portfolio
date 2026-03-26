@@ -1,0 +1,16 @@
+# Treat all files as binary by default for line endings
+* text=auto
+
+# Explicitly mark binary formats — never apply CRLF conversion
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.mp4 binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
