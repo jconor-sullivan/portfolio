@@ -198,8 +198,10 @@
       flex-shrink: 0;
     }
     .avatar-img {
-      max-height: 160px;
-      width: auto;
+      width: 140px;
+      height: 110px;
+      object-fit: cover;
+      object-position: center top;
       border-radius: 4px;
       border: 1px solid var(--muted);
       transition: filter 0.2s, border-color 0.2s;
@@ -493,7 +495,7 @@
       /* avatar stays right, header text takes remaining space */
       .header-area { flex-direction: row; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
       .mobile-header { flex: 1; min-width: 0; }
-      .avatar-img { max-height: 90px; width: auto; }
+      .avatar-img { width: 80px; height: 64px; object-fit: cover; object-position: center top; }
       .avatar-label { font-size: 0.6rem; }
 
       /* scrollable tree */
@@ -696,7 +698,6 @@
         </div>
         <div class="box-body">
           <p>This portfolio is an intentional manifestation of the systems I build. By utilizing a CLI aesthetic, a nested folder hierarchy, and a multi-layered information architecture, I am showcasing the precise mental models I use to translate complex data into intuitive human experiences.</p>
-          <p>My work focuses on engineering documentation systems, UX frameworks, and behavioral layers for AI and enterprise products. I approached the creation of this portfolio with the same rigor I bring to global-scale platforms: with deep technical intention, a robust structural foundation, and a sophisticated understanding of the user.</p>
         </div>
       </div>
       <div class="box">
